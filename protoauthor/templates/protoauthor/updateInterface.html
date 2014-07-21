@@ -1,0 +1,85 @@
+{% load staticfiles %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script src="{% static 'protoauthor/draggable.js' %}"></script>
+<script type="text/javascript" src="http://www.javascripttoolbox.com/libsource.php/contextmenu/source/jquery.contextmenu.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'protoauthor/style.css' %}">
+<script type="text/javascript" src="http://jqueryrotate.googlecode.com/svn/trunk/jQueryRotate.js"></script>
+
+<a href="/" style="font-size:30px;">Back</a><br/>
+
+<h2>Widget Palette</h2>
+  <div class="select" id="regular">
+<div class="draggable-widget"><span class="widget" id="text">Text Label</span></div>
+<div class="draggable-widget"><img class="widget" id="arrow"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-0.jpg"></div>	
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-4.jpg"></div>
+<div class="draggable-widget">
+  <div class="widget" id="button" style="background-image:url('http://pb-i4.s3.amazonaws.com/photos/365451-1405470205-0.jpg');background-repeat:no-repeat;background-position:center; background-size:contain;">
+  <span class="text"  style="position:relative;top:40%;left:38%;background-color:white;font-size:20px;">OK</span>
+  </div>
+</div>
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-1.jpg"></div>
+	
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405284492-1.jpg"></div>
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405284492-2.jpg"></div>
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405909782-1.jpg"></div>	
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405879878-0.jpg"></div>	
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405879878-3.jpg"></div>	
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-2.jpg"></div>		
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405910012-0.jpg"></div>		
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405910012-1.jpg"></div>
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405910012-3.jpg"></div>
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405910012-4.jpg"></div>
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405909782-3.jpg"></div>
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405909782-4.jpg"></div>
+<div class="draggable-widget"><img class="widget" id="picture"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-3.jpg"></div>	
+
+
+
+	
+<div class="draggable-widget" id="addmyown"><img class="widget" id="addown"
+    src="http://pb-i4.s3.amazonaws.com/photos/365451-1405864976-0.jpg"></div>	
+
+  </div>	
+  
+ <ul class="custom-navigation">
+      
+        <li><a href="#" class="nav1" data-item="0">Regular</a></li>
+        <li><a href="#" class="nav2" data-item="1">containers</a></li>
+		<li><a href="#" class="nav3" data-item="2">media</a></li>
+        <li><a href="#" class="nav4" data-item="3">ios</a></li>
+        <li><a href="#" class="nav5" data-item="4">others</a></li>
+</ul>
+
+<div id="dialog" title="User define"></div>
+
+<br/>
+<br/>
+
+
+<div id="droppable" class="ui-widget-content">
+{% for widget in widgets %}
+<div class="widget existing-widget draggable-widget" widget-id="{{widget.pk }}" style="position: absolute; left:{{ widget.left }}; top:{{ widget.top }}; width:{{widget.width}}; height:{{widget.height}}">
+    {{ widget.value|safe }}
+</div>
+{% endfor %}
+
+</div>
+

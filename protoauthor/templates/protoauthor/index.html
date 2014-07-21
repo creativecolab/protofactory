@@ -1,0 +1,22 @@
+<form action="/createInterface/" method="post">
+    {% csrf_token %}
+    New Prototype Name: <input type="text" name="name" />
+    <input type="submit" value="create">
+</form>
+{% if interfaces %}
+    <ul>
+        {% for interface in interfaces %}
+        <li>
+        <a href="{% url 'updateInterface' interface.id %}">{{ interface.name }}</a>&nbsp; 
+        (<a href="{% url 'deleteInterface' interface.id %}" onclick="return confirm('Are you sure?')">
+            delete
+        </a>)
+        -- live at:<a href="{% url 'viewInterface' interface.id %}">
+            {% url 'viewInterface' interface.id %}
+        </a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No interfaces.</p>
+{% endif %}
