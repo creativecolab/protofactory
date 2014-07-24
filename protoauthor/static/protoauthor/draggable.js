@@ -92,19 +92,20 @@ function makeEditable(event){
 	//	uneditableText.css("position","relative");
 	//	uneditableText.css("top","37%");
 	//	uneditableText.css("left","32%");
-		var s='font-size:20px;position:relative;top:37%;left:32%;';
-	    uneditableText[0].setAttribute('style',s);
+		//var s='font-size:20px;position:relative;top:37%;left:32%;';
+	  //  uneditableText[0].setAttribute('style',s);
 		uneditableText.addClass("text");
 		}
 		
-		uneditableText.addClass("widget");
+		
         uneditableText.text(text);
 		$(this).replaceWith(uneditableText);
-
+        
         widget = $(uneditableText).parent();
+		widget_1 = $(widget).parent();
         $(uneditableText).dblclick(makeEditable);
 
-        updateWidget(widget);
+        updateWidget(widget_1);
     });
 }
 //edit for text label ends 
@@ -125,6 +126,12 @@ function bringtofront(event,ui){
  $(this).bringToTop();
 }
 
+
+
+
+
+
+
 $(function () {
 
     // BEGIN DJANGO AJAX
@@ -138,6 +145,8 @@ $(function () {
 	    aspectRatio:1
 	};
 	var x=1;
+	var selectone;
+	var addmy=$(".existing-widget").find("#addown");
     //define the arrow picture
 	var images=new Array()
 	images[0] = "http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-0.jpg";
@@ -149,13 +158,7 @@ $(function () {
 	images[6]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690882-1.jpg";
 	images[7]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690882-2.jpg";
 	//end define arrows
-	//contextmenu
-	var menu1 = [
-  {'Option 1':function(menuItem,menu) { alert("You clicked Option 1!"); } },
- 
-  {'Option 2':function(menuItem,menu) { alert("You clicked Option 2!"); } }
-];
-	//
+
 	
     $.ajaxSetup({
         crossDomain: false, // obviates need for sameOrigin test
@@ -191,7 +194,7 @@ $(function () {
         }
     });
 	
-
+    
 
     $('.existing-widget').resizable({
 	    resize:function(event,ui){
@@ -210,7 +213,7 @@ $(function () {
 			  if(!spantext.hasClass("text")){
           	  if(!ctrlpress){
 			  var k='font-size:'+(40*ratio)+'px';
-		      spantext[0].setAttribute("style",k);
+		 //     spantext[0].setAttribute("style",k);
 		//	  $(this).css({'font-size':(40*ratio)+"px"});
 			 }
 			 }
@@ -221,41 +224,101 @@ $(function () {
     
 	//bring to front
 	$('.existing-widget').dblclick(bringtofront);
+	
+    //select and focusout
+	/*
+	$('html').one('click',function(){
+		$('widget').removeClass("selected");
+	});
+	*/
+	$('html').click(function(event){
+		$('.widget').removeClass("selected");
+	});
+	$(".existing-widget").click(function(event){
+	  event.stopPropagation();
+      $(this).addClass("selected");
+	});
+	 //select and focusout ends
+	
+    // copy and paste
+	$("html").bind({
+		copy: function(){
+			
+			alert('copy behaviour detected!');
+			//console.log($(this));
+			widget = $(".selected").clone();
+			number=$('.selected').size();
+		},
+		paste: function(){
+			alert('paste detect');
+			var i=0;
+			for(i=0;i<number;i++){
+			 $("#droppable").append(widget[i]);
+            //$(widget[i]).addClass('existing-widget');
+			$(widget[i]).click(function(event){
+				event.stopPropagation();
+				$(this).addClass("selected");
+			});
+			
+			
+			$(widget[i]).removeClass('draggable-widget');
+			$(widget[i]).removeClass('ui-draggable');
+			$(widget[i]).removeClass('ui-resizable');
+			$(widget[i]).find('.ui-resizable-handle').remove();
+	            console.log($(widget[i]));
+                $(widget[i]).css('position', 'absolute');
+                $(widget[i]).css('top',$(widget[i]).position().top - 20-i*3);
+                $(widget[i]).css('left',$(widget[i]).position().left - 20-i*3);
+                //$(widget[i]).css('width', $(widget[i]).width());
+                //$(widget[i]).css('height', 75);
+                
+                $(widget[i]).find('span').dblclick(makeEditable);
+				
+                $(widget[i]).draggable({
+                    revert: function(event){
+                        if (!event){
+                            deleteWidget(this);
+                        }
+                        return false;
+                    }
+                });
+				
+				$(widget[i]).resizable({
+				    
+                       stop: function(event, ui){
+					    
+                        updateWidget(this);
+                    }
+				 });
+				
+				$(widget[i]).dblclick(bringtofront);
+				createWidget(widget[i]);
+				}
+				
+			
+			$('.existing-widget').removeClass("selected");  
+			
+		},
+	});
 
-	//add my own picture
-	 $( "#dialog" ).dialog({
-      autoOpen: false,
-      show: {
-        effect: "blind",
-        duration: 1000
-      },
-      hide: {
-        effect: "explode",
-        duration: 1000
-      }
-    });
+	//copy and paste ends
+
  
-    $( "#addmyown" ).click(function() {
-    //  $( "#dialog" ).dialog( "open" );
-	 var favorite = prompt('What is the URL of your picture?', 'http://');
+    //add pictures	
+	$(".existing-widget").dblclick(function(){
+	var myown=$(this).find("#addown");
+	if($(myown).length>0){
+	var favorite = prompt('What is the URL of your picture?', 'http://');
     
      if (favorite) {
 	 alert("Your link is: " +  favorite);
-	 document.getElementById('addown').src = favorite;
+	 myown.attr("src",favorite);
 	 }
      else alert("You pressed Cancel or no value was entered!");
-	
-    });
-	
-
-	
-	
-	
-	
-	
-	
-	
-	//end add
+	}
+	updateWidget(this);
+});
+    //end add
 	
     //Handle widget palette
     $(".draggable-widget:not(.existing-widget)").draggable({
@@ -264,6 +327,8 @@ $(function () {
             return !event; 
         }
 	});
+	
+	
 
     // Make canvas droppable
     $("#droppable").droppable({
@@ -272,15 +337,20 @@ $(function () {
                 widget = $(ui.draggable).clone();
                 $(this).append(widget);
                 $('#droppable .draggable-widget').addClass('existing-widget');
+		//		myown=$(widget).find("#addown");
+		//		if($(myown).length>0){
+		//		$(myown).addClass("addmyown");
+		//		}
                 $(widget).css('position', 'absolute');
                 $(widget).css('top', ui.position.top - $(this).position().top - 13);
                 $(widget).css('left', ui.position.left - $(this).position().left - 13);
                 $(widget).css('width', 150);
-                $(widget).css('height', 150);
+                $(widget).css('height', 75);
                
                 $(widget).find('span').dblclick(makeEditable);
 				
                 $(widget).draggable({
+				     grid: [ 25, 25 ] ,
                     revert: function(event){
                         if (!event){
                             deleteWidget(this);
@@ -298,8 +368,106 @@ $(function () {
 	                    }
 				updateWidget(this);
                  });
+				  
+                 //add pictures	
+	           $(widget).dblclick(function(){
+            	var myown=$(this).find("#addown");
+	            if($(myown).length>0){
+	            var favorite = prompt('What is the URL of your picture?', 'http://');
+    
+                if (favorite) {
+	            alert("Your link is: " +  favorite);
+	            myown.attr("src",favorite);
+	               }
+               else alert("You pressed Cancel or no value was entered!");
+	            }
+				updateWidget(this);
+                  });
+               //end add
+			   
+		       //select and focusout
+	           $(widget).click(function(event){
+	           $('html').one('click',function(){
+	           $('.existing-widget').removeClass("selected");
+	             });
+	            event.stopPropagation();
+               $(this).addClass("selected");
+	           });
+	          //select and focusout ends
+	 
+             // copy and paste
+			 /*
+	         $(widget).bind({
+		      copy: function(){
+			        alert('copy behaviour detected!');
+			        //console.log($(this));
+			        widget = $(".selected").clone();
+			        number=$('.selected').size();
+		       },
+		      paste: function(){
+			        alert('paste detect');
+			        var i=0;
+			        for(i=0;i<number;i++){
+			        $("#droppable").append(widget[i]);
+                    $('#droppable .draggable-widget').addClass('existing-widget');
+                    $(widget[i]).css('position', 'absolute');
+                    $(widget[i]).css('top',$('.selected').position().top - 20-i*3);
+                    $(widget[i]).css('left',$('.selected').position().left - 20-i*3);
+                    $(widget[i]).css('width', 150);
+                    $(widget[i]).css('height', 75);
+               
+                    $(widget[i]).find('span').dblclick(makeEditable);
 				
-		 
+                    $(widget[i]).draggable({
+                       revert: function(event){
+                        if (!event){
+                            deleteWidget(this);
+                        }
+                        return false;
+                        }
+                    });
+				
+				    $(widget[i]).resizable({
+					  
+				      resize:function(event,ui){
+					       if(event.ctrlKey){
+						    ctrlpress=1;
+			               }
+						   if(event.shirtKey){
+						   $(widget[i]).resizable(settings);
+						   }
+						   updateWidget(this);
+				
+				        },
+                       stop: function(event, ui){
+					    var textheight=parseFloat($(this).css('height'));
+						var textwidth=parseFloat($(this).css('width'));
+						var textmin=Math.max(textheight,textwidth);
+						var ratio=textmin/100;                    //original wideget is 100px*100px
+						spantext=$(this).find("span");
+			            if(!spantext.hasClass("text")){
+						
+                        if(!ctrlpress){
+						var k='font-size:'+(40*ratio)+'px';
+						
+		                spantext[0].setAttribute("style",k);
+						}
+						}
+                        ctrlpress=0;
+                        updateWidget(this);
+                    }
+					
+                 });
+
+				$(widget[i]).dblclick(bringtofront);
+				 createWidget(widget[i]);
+				}
+				$('.existing-widget').removeClass("selected"); 
+		        },
+	       });
+			*/
+	       //copy and paste ends
+
 				
 				// change text for new text label
                 $(widget).resizable({
