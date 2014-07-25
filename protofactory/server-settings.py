@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'p3lkj3223sosolj(7#vr5$3234y=(peyacir6^halqp-txy&twoeva4+bb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = False
 
 
 TEMPLATE_DIRS = (
-    '/home/cmaclell/protofactory/template',
+    '/home/cmaclell/protofactory/protoauthor/templates',
     #'/Users/cmaclell/Dropbox/projects/humansort/template',
 )
 
