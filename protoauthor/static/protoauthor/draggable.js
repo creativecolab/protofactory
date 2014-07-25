@@ -26,7 +26,7 @@ function createWidget(widget){
     var vals = href.split('/');
     prefix = "/";
     if (vals[3] == vals[vals.length-4]){
-        prefix = vals[3] + "/";
+        prefix = prefix + vals[3] + "/";
     }
     console.log(prefix);
     interface_id = vals[vals.length - 2];
@@ -52,7 +52,7 @@ function updateWidget(widget){
     var vals = href.split('/');
     prefix = "/";
     if (vals[3] == vals[vals.length-4]){
-        prefix = vals[3] + "/";
+        prefix = prefix + vals[3] + "/";
     }
     $.ajax({
         type: "POST",
@@ -75,7 +75,7 @@ function deleteWidget(widget){
     var vals = href.split('/');
     prefix = "/";
     if (vals[3] == vals[vals.length-4]){
-        prefix = vals[3] + "/";
+        prefix = prefix + vals[3] + "/";
     }
     $.ajax({
         type: "POST",
