@@ -1,53 +1,84 @@
+html {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
 div {
     float: left;
-  }
-  
- h2{
-    position:relative;
-	top:0px;
-	left:2px;
-    color:black;
-	font-family:Georgia;
-	font-size:50px;
-	text-align:left;
-    
 }
 
-#droppable {
-    position:relative;
-    left: 0%;
-	top:5px;
+.full-sized{
     width: 100%;
-    height: 80%;
-    background-color:transparent;
-
-	
+    height: 100%;
 }
 
-.trash{
- position:relative;
- top:-10px;
- left:80%;
- width:150px;
- height:150px;
- z-index:1;
+#nav{
+    width: 100%;
+    height: 5%;
+    clear: both;
+    background-color: #efefef;
+}
+
+#palette{
+    width:92%;
+    height:20%;
+    float:left;
+    background-color:grey;
+    overflow:scroll;
+    display:inline;
+    background-color: white;
+}
+
+#canvas {
+    position:relative;
+    width: 100%;
+    min-height: 75%;
+    //background-color:transparent;
+    background-image: linear-gradient(0deg, transparent 24%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1)26%, transparent 27%, transparent 74%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1)76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1)26%, transparent 27%, transparent 74%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1) 76%, transparent 77%, transparent);
+    background-size:50px 50px;
+
 
 }
 
-
-html {
-  margin: 0;
-  padding: 0;
-  background-color: white;
-
-  background-image: linear-gradient(0deg, transparent 24%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1)26%, transparent 27%, transparent 74%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1)76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1)26%, transparent 27%, transparent 74%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1) 76%, transparent 77%, transparent);
-  background-size:50px 50px;
-
+.white-background{
+    background-color: white;
 }
+
+#trash{
+    float: right;
+    width: 8%;
+    height: 20%;
+    overflow: none;
+    z-index:1;
+}
+
+#trash img{
+    margin: auto;
+    height: 100px;
+    width: 100px;
+}
+
+
+
 
 .ui-widget-content{
 
-background:0;
+    background:0;
+}
+
+.input-box-background{
+    background-image: url('http://pb-i4.s3.amazonaws.com/photos/365451-1405974166-0.jpg');
+    background-repeat: no-repeat;
+    background-position:center; 
+    background-size:100% 100%;
+    background-color:transparent;
 }
 
 .widget-content{
@@ -55,61 +86,74 @@ background:0;
     height: 100%;
 }
 
-.text{
-
-z-index:100;
-display: table-cell;
-vertical-align:middle;
-font-size:30px;
-font-family:sans-serif;
-
+.center-text{
+    text-align: center;
+    width: 100%;
+    height: 100%;
 }
 
 .draggable-widget{
-    width: 150px;
+    width: 75px;
     height: 75px;
     cursor: move;
-	background-color:white;
-    
     font-family:sans-serif;
     overflow: hidden;
-    font-size:30px;
-
 }
 
 .widget{
     width: 100%;
     height: 100%;
-	cursor: pointer;
+    cursor: pointer;
     display: table;
     text-align: center;
-	margin-top:auto;
+    margin-top:auto;
+}
 
+.iphone-background{
+    background-image: url('http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-3.jpg');
+    background-repeat: no-repeat;
+    background-position:center; 
+    background-size:100% 100%;
+}
+
+.button-background{
+    background-image: url('http://i.imgur.com/qJli7Rf.png');
+    background-repeat: no-repeat;
+    background-position:center; 
+    background-size:100% 100%;
+}
+
+.droplist-background{
+    width: 100%; 
+    height: 100%; 
+    background-image: url('http://i.imgur.com/Fpd4IHq.png');
+    background-repeat: no-repeat;
+    background-size:100% 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.droplist-left {
+    width: 66%;
+    height: 100%;
+    position: relative; 
+    background-image: url('http://i.imgur.com/E0fDspS.png');
+    background-repeat: no-repeat;
+    background-size:100% 100%;
 }
 
 .selected{
-   border :dotted 3px red ;
+    border :dotted 3px red ;
 }
 
 
 
 #text{
-z-index:100;
-display:block;
-font-size:inherit;
+    z-index:100;
+    display:block;
+    font-size:inherit;
 }
 
-.select{
-   
-	 
-
-     width:100%;
-	 height:20%;
-	 background-color:grey;
-     overflow:scroll;
-	 display:inline;
-	 
-}
 
 input {
     width: 95%;
@@ -117,4 +161,4 @@ input {
 }
 
 
- 
+

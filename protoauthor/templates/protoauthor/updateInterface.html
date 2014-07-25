@@ -7,46 +7,90 @@
 <link rel="stylesheet" type="text/css" href="{% static 'protoauthor/style.css' %}">
 <script type="text/javascript" src="http://jqueryrotate.googlecode.com/svn/trunk/jQueryRotate.js"></script>
 
-<a href="/" style="font-size:30px;">Back</a><br/>
+<div id="nav">
+    <a href="/">Back</a>
+</div>
 
-<h2>Widget Palette
-    <div class="trash"><img class="trash" 
-        src="http://2.bp.blogspot.com/_EDGT2Qfb0Q4/RnxCiO6PVGI/AAAAAAAAAAc/5LEXbhXW0rU/s320/trashfull.png"></div>	
-</h2>	
-<div class="select" id="regular">
-    <div class="draggable-widget"><div class="widget-content"><span>Text Label</span></div></div>
-    <div class="draggable-widget"><img class="widget" id="arrow"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-0.jpg"></div>	
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-4.jpg"></div>
-    <div class="draggable-widget" style="background-color:transparent;">
-        <div class="widget" id="button" style="background-image:url('http://pb-i4.s3.amazonaws.com/photos/365451-1405974166-0.jpg');background-repeat:no-repeat;background-position:center; background-size:100% 100%;background-color:transparent;">
-            <span class="text"  style="font-size:30px;">Text Square</span>
+<div id="palette">
+    <div class="draggable-widget">
+        <div class="widget-content">
+            <span>Text Label</span>
         </div>
     </div>
 
-    <div class="draggable-widget" style="height:75px;background-color:red;">
-        <div class="widget" id="button" style="background-image:url('http://i.imgur.com/qJli7Rf.png');background-repeat:no-repeat;background-position:center; background-size:100% 100%;">
-            <span class="text"  style="font-size:30px;">Button</span>
+    <div class="draggable-widget">
+        <div class="widget-content">
+            <img class="full-sized" src="http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-0.jpg">
+        </div>	
+    </div>
+
+    <!--
+    <div class="draggable-widget">
+        <div class="widget-content">
+            <img class="full-sized" src="http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-4.jpg">
+        </div>
+    </div>
+    -->
+
+    <div class="draggable-widget">
+        <div class="widget-content">
+            <div class="full-sized input-box-background">
+                <div class="full-sized">
+                    <span>Input box</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="draggable-widget">
+        <div class="widget-content">
+            <div class="white-background full-sized">
+                <div class="full-sized button-background">
+                    <div class="center-text">
+                        <span>Button</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>	
 
     <div class="draggable-widget" >
-        <div class="widget" style=" width:100%; height:100%; background-image:url('http://i.imgur.com/Fpd4IHq.png');background-repeat:no-repeat;background-size:100% 100%;">
-            <div class="widget" style="width:66%; position:relative; left:0%;background-image:url('http://i.imgur.com/E0fDspS.png');background-repeat:no-repeat;background-size:100% 100%;">
-                <span class="text"  style="font-size:20px;">Drop List</span>
+        <div class="widget-content">
+            <div class="white-background full-sized">
+                <div class="droplist-background">
+                    <div class="droplist-left">
+                        <div class="center-text">
+                            <span>Drop List</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="draggable-widget" >
-        <div class="widget" style=" width:100%; height:100%; background-image:url('http://i.imgur.com/ODG8xVZ.png');background-repeat:no-repeat;background-size:100% 100%;">
-            <div class="widget" style="width:66%; position:relative; left:20%;">
-                <span class="text"  style="font-size:30px;">List</span>
-            </div>
+        <div class="widget-content">
+            <ul class="full-sized">
+                <li class="full-sized"><span>List</span></li>
+            </ul>
         </div>
     </div>
 
+    <div class="draggable-widget">
+        <div class="widget-content">
+            <div class="iphone-background full-sized"></div>
+        </div>
+    </div>	
+    
+    <div class="draggable-widget" id="addmyown">
+        <div class="widget-content">
+            <img class="widget" id="addown" src="http://pb-i4.s3.amazonaws.com/photos/365451-1405864976-0.jpg">
+        </div>
+    </div>	
+
+    <!-- NOT CONFIGURED CORRECTLY -->
+
+    <!--
     <div class="draggable-widget" >
         <div class="widget" style=" width:100%; height:100%; background-image:url('http://i.imgur.com/CJfQxn0.png');background-repeat:no-repeat;background-size:100% 100%;">
             <div class="widget" style="width:66%; position:relative; left:20%;">
@@ -101,14 +145,15 @@
         src="http://pb-i4.s3.amazonaws.com/photos/365451-1405909782-4.jpg"></div>
     <div class="draggable-widget"><img class="widget" id="picture"
         src="http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-3.jpg"></div>	
-
-
-
-
     <div class="draggable-widget" id="addmyown"><img class="widget" id="addown"
         src="http://pb-i4.s3.amazonaws.com/photos/365451-1405864976-0.jpg"></div>	
 
+    -->
 </div>	
+
+<div id="trash">
+    <img src="http://2.bp.blogspot.com/_EDGT2Qfb0Q4/RnxCiO6PVGI/AAAAAAAAAAc/5LEXbhXW0rU/s320/trashfull.png">
+</div>
 
 <div id="dialog" title="User define"></div>
 
@@ -116,8 +161,7 @@
 <br/>
 
 
-<div id="droppable" class="ui-widget-content">
-
+<div id="canvas" class="ui-widget-content">
     {% for widget in widgets %}
     <div class="widget existing-widget draggable-widget" widget-id="{{widget.pk }}" style="position: absolute; left:{{ widget.left }}; top:{{ widget.top }}; width:{{widget.width}}; height:{{widget.height}}">
         {{ widget.value|safe }}

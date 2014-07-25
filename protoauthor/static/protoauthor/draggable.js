@@ -113,7 +113,11 @@ function makeEditable(event){
         updateWidget(widget);
     });
 }
-//edit for text label ends 
+
+function bringtofront(event,ui){
+    $(this).bringToTop();
+    $(this).find('.widget-content').attr("depth", $(this).css('z-index'));
+}
 
 function changeImage(event,ui)
 {
@@ -125,8 +129,8 @@ function changeImage(event,ui)
     }
 }
 
-function bringtofront(event,ui){
-    $(this).bringToTop();
+function bindExisting(){
+    // bind all of the existing widgets and set their z-indexes.
 }
 
 $(function () {
@@ -143,7 +147,7 @@ $(function () {
     };
     var x=1;
     var selectone;
-    var addmy=$(".existing-widget").find("#addown");
+    //var addmy=$(".existing-widget").find("#addown");
     //define the arrow picture
     var images=new Array();
     images[0] = "http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-0.jpg";
@@ -243,16 +247,16 @@ $(function () {
     $("html").bind({
         copy: function(){
 
-            alert('copy behaviour detected!');
+            //alert('copy behaviour detected!');
             //console.log($(this));
             widget = $(".selected").clone();
             number=$('.selected').size();
         },
         paste: function(){
-            alert('paste detect');
+            //alert('paste detect');
             var i=0;
             for(i=0;i<number;i++){
-                $("#droppable").append(widget[i]);
+                $("#canvas").append(widget[i]);
                 //$(widget[i]).addClass('existing-widget');
                 $(widget[i]).click(function(event){
                     event.stopPropagation();
@@ -310,10 +314,10 @@ $(function () {
             var favorite = prompt('What is the URL of your picture?', 'http://');
 
             if (favorite) {
-                alert("Your link is: " +  favorite);
+                console.log("Your link is: " +  favorite);
                 myown.attr("src",favorite);
             }
-            else alert("You pressed Cancel or no value was entered!");
+            else console.log("You pressed Cancel or no value was entered!");
         }
         updateWidget(this);
     });
@@ -330,12 +334,12 @@ $(function () {
 
 
     // Make canvas droppable
-    $("#droppable").droppable({
+    $("#canvas").droppable({
         drop: function(event, ui) {
             if (!$(ui.draggable).hasClass('existing-widget')){
                 widget = $(ui.draggable).clone();
                 $(this).append(widget);
-                $('#droppable .draggable-widget').addClass('existing-widget');
+                $('#canvas .draggable-widget').addClass('existing-widget');
                 //		myown=$(widget).find("#addown");
                 //		if($(myown).length>0){
                 //		$(myown).addClass("addmyown");
@@ -375,10 +379,10 @@ $(function () {
                         var favorite = prompt('What is the URL of your picture?', 'http://');
 
                         if (favorite) {
-                            alert("Your link is: " +  favorite);
+                            console.log("Your link is: " +  favorite);
                             myown.attr("src",favorite);
                         }
-                        else alert("You pressed Cancel or no value was entered!");
+                        else console.log("You pressed Cancel or no value was entered!");
                     }
                     updateWidget(this);
                 });
