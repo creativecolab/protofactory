@@ -415,7 +415,7 @@ $(function () {
                 $(widget).find('.edit-list').dblclick(makeListEditable);
 
                 $(widget).draggable({
-                    grid: [ 25, 25 ] ,
+                    //grid: [ 25, 25 ] ,
                     revert: function(event){
                         if (!event){
                             deleteWidget(this);
