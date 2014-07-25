@@ -21,21 +21,31 @@ function csrfSafeMethod(method) {
 }
 // DONE DJANGO HACK
 
-function createWidget(widget){
-    // add widget and save position
+function get_interface_id(){
     var href = $(location).attr("href");
     var vals = href.split('/');
-    prefix = "/";
+    return  vals[vals.length - 2];
+}
+
+function get_site_prefix(){
+    var href = $(location).attr("href");
+    var vals = href.split('/');
+    var prefix = "/";
     if (vals[3] == vals[vals.length-4]){
         prefix = prefix + vals[3] + "/";
     }
-    interface_id = vals[vals.length - 2];
+    return prefix
+}
+
+function createWidget(widget){
+    var prefix = get_site_prefix();
+    var interface_id = get_interface_id();
     $.ajax({
         type: "POST",
         url: prefix + "createWidget/", 
         data: { 
             interface_id: interface_id, 
-        value: $(widget).find(".widget")[0].outerHTML, 
+        value: $(widget).find(".widget-content")[0].outerHTML, 
         top: $(widget).css('top'), 
         left: $(widget).css('left'), 
         width: $(widget).css('width'), 
@@ -48,22 +58,18 @@ function createWidget(widget){
 }
 
 function updateWidget(widget){
-    var href = $(location).attr("href");
-    var vals = href.split('/');
-    prefix = "/";
-    if (vals[3] == vals[vals.length-4]){
-        prefix = prefix + vals[3] + "/";
-    }
+    var prefix = get_site_prefix();
     $.ajax({
         type: "POST",
         url: prefix + "updateWidget/", 
         data: { 
             widget_id: $(widget).attr('widget-id'), 
-        value: $(widget).find(".widget")[0].outerHTML, 
+        value: $(widget).find(".widget-content")[0].outerHTML, 
         top: $(widget).css('top'), 
         left: $(widget).css('left'),
         width: $(widget).css('width'),
-        height: $(widget).css('height'),},
+        height: $(widget).css('height')
+        },
         success: function(data){
             console.log(data);
         },
@@ -71,12 +77,7 @@ function updateWidget(widget){
 }
 
 function deleteWidget(widget){
-    var href = $(location).attr("href");
-    var vals = href.split('/');
-    prefix = "/";
-    if (vals[3] == vals[vals.length-4]){
-        prefix = prefix + vals[3] + "/";
-    }
+    var prefix = get_site_prefix();
     $.ajax({
         type: "POST",
         url: prefix + "deleteWidget/", 
@@ -89,50 +90,35 @@ function deleteWidget(widget){
 }
 
 function makeEditable(event){
-    editableText = $("<input />");
-    text = $(this).text();
-    editableText.val(text);
-    var a=0;
-    if($(this).hasClass("text"))   //whether is a textlabel OR textbutton
-    { a=1;}
-    var originfont=$(this).css('font-size');
+    editableText = $("<textarea />");
+    $(editableText).css("width","100%");
+    $(editableText).css("height","100%");
+    editableText.val($(this).text());
+
     $(this).replaceWith(editableText);
     $(editableText).focus();
     $(editableText).change(function(){
         $(this).blur();
     });
     $(editableText).focusout(function(event, ui){
-
-        text = $(this).val();
-        uneditableText = $("<span/>");
-        if(a==1){
-            //	uneditableText.css("position","relative");
-            //	uneditableText.css("top","37%");
-            //	uneditableText.css("left","32%");
-            //var s='font-size:20px;position:relative;top:37%;left:32%;';
-            //  uneditableText[0].setAttribute('style',s);
-            uneditableText.addClass("text");
-        }
-
-
-        uneditableText.text(text);
+        var uneditableText = $("<span/>");
+        uneditableText.text($(this).val());
         $(this).replaceWith(uneditableText);
 
         widget = $(uneditableText).parent();
-        widget_1 = $(widget).parent();
+        while (!widget.attr('widget-id')){
+            widget = widget.parent();
+        }
         $(uneditableText).dblclick(makeEditable);
-
-        updateWidget(widget_1);
+        updateWidget(widget);
     });
 }
 //edit for text label ends 
 
 function changeImage(event,ui)
 {
-    var images=new Array(' http://pb-i4.s3.amazonaws.com/photos/365451-1405284777-3.jpg ',' http://pb-i4.s3.amazonaws.com/photos/365451-1405284877-1.jpg ')
-        //	images[0] = "http://pb-i4.s3.amazonaws.com/photos/365451-1405284777-3.jpg";
-        //	images[1] = "http://pb-i4.s3.amazonaws.com/photos/365451-1405284877-1.jpg";
-        document.getElementById("picture").src=images[x];
+    var images=new Array(' http://pb-i4.s3.amazonaws.com/photos/365451-1405284777-3.jpg ',' http://pb-i4.s3.amazonaws.com/photos/365451-1405284877-1.jpg ');
+    document.getElementById("picture").src=images[x];
     x++;
     if(x==1){
         x=0;
@@ -215,6 +201,7 @@ $(function () {
             }
         },
         stop: function(event, ui){
+            /*
             var textheight=parseFloat($(this).css('height'));
             var textwidth=parseFloat($(this).css('width'));
             var textmin=Math.max(textheight,textwidth);
@@ -229,6 +216,7 @@ $(function () {
                 }
             }
             ctrlpress=0;	    
+            */
             updateWidget(this);
         }
     });
@@ -493,6 +481,7 @@ $(function () {
 
                     },
                 stop: function(event, ui){
+                    /*
                     var textheight=parseFloat($(this).css('height'));
                     var textwidth=parseFloat($(this).css('width'));
                     var textmin=Math.max(textheight,textwidth);
@@ -507,6 +496,7 @@ $(function () {
                         }
                     }
                     ctrlpress=0;
+                    */
                     updateWidget(this);
                 }
 
