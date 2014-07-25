@@ -1,3 +1,5 @@
+var highest = 1;
+
 // DJANGO hack to be able to post with CSRF
 // using jQuery
 function getCookie(name) {
@@ -101,7 +103,8 @@ function makeEditable(event){
         $(this).blur();
     });
     $(editableText).focusout(function(event, ui){
-        var uneditableText = $("<span/>");
+        var uneditableText = $("<div/>");
+        uneditableText.addClass("text");
         uneditableText.text($(this).val());
         $(this).replaceWith(uneditableText);
 
@@ -114,9 +117,55 @@ function makeEditable(event){
     });
 }
 
+function makeListEditable(event){
+    editableText = $("<textarea />");
+    $(editableText).css("width","100%");
+    $(editableText).css("height","100%");
+    var text = "";
+    var elements = $(this).find("li");
+    for(var i = 0; i < elements.length; i++){
+        if (i > 0){
+            text += "\n";
+        }
+        console.log(elements[i]);
+        text += $(elements[i]).text();
+    }
+
+    //editableText.val($(this).text());
+    editableText.val(text);
+
+    $(this).replaceWith(editableText);
+    $(editableText).focus();
+    $(editableText).change(function(){
+        $(this).blur();
+    });
+    $(editableText).focusout(function(event, ui){
+        var uneditableText = $("<ul/>");
+        uneditableText.addClass("edit-list");
+        var lines = $(this).val().split('\n');
+        for (var i = 0; i < lines.length; i++){
+            var element = $("<li/>");
+            element.text(lines[i]);
+            uneditableText.append(element);
+        }
+        $(this).replaceWith(uneditableText);
+        widget = $(uneditableText).parent();
+        while (!widget.attr('widget-id')){
+            widget = widget.parent();
+        }
+        $(uneditableText).dblclick(makeListEditable);
+        updateWidget(widget);
+    });
+}
+
+function setDepthFront(widget){
+    $(widget).bringToTop();
+    $(widget).find('.widget-content').attr("depth", $(widget).css('z-index'));
+
+}
+
 function bringtofront(event,ui){
-    $(this).bringToTop();
-    $(this).find('.widget-content').attr("depth", $(this).css('z-index'));
+    setDepthFront($(this));
 }
 
 function changeImage(event,ui)
@@ -141,7 +190,6 @@ $(function () {
     var ctrlpress=0;
     var value=0;
     var test = 5;
-    var highest = 1;
     var settings={
         aspectRatio:1
     };
@@ -177,7 +225,8 @@ $(function () {
     };
 
     //Handle existing widgets
-    $('.existing-widget').find('span').dblclick(makeEditable);
+    $('.existing-widget').find('.text').dblclick(makeEditable);
+    $('.existing-widget').find('.edit-list').dblclick(makeListEditable);
     $('.existing-widget #arrow').dblclick(function(event,ui){
         $(this).attr("src",images[x]);
         x++;
@@ -185,6 +234,16 @@ $(function () {
             x=0;
         }
     });
+    var contents = $('.existing-widget').find('.widget-content');
+    for (var i = 0; i < contents.length; i++){
+        $(contents[i]).parent().css('z-index', $(contents[i]).attr('depth'));    
+    }
+    widgets = $('.existing-widget');
+    for (var i = 0; i < widgets.length; i++){
+        if ($(widgets[i]).css('z-index') && parseInt($(widgets[i]).css('z-index')) > highest){
+            highest = parseInt($(widgets[i]).css('z-index'));
+        }
+    }
 
     $('.existing-widget').draggable({
         revert: function(event){
@@ -234,8 +293,8 @@ $(function () {
        $('widget').removeClass("selected");
        });
        */
-    $('html').click(function(event){
-        $('.widget').removeClass("selected");
+    $('#canvas').click(function(event){
+        $('.selected').removeClass("selected");
     });
     $(".existing-widget").click(function(event){
         event.stopPropagation();
@@ -275,7 +334,8 @@ $(function () {
                 //$(widget[i]).css('width', $(widget[i]).width());
                 //$(widget[i]).css('height', 75);
 
-                $(widget[i]).find('span').dblclick(makeEditable);
+                $(widget[i]).find('.text').dblclick(makeEditable);
+                $(widget[i]).find('.edit-list').dblclick(makeListEditable);
 
                 $(widget[i]).draggable({
                     revert: function(event){
@@ -296,10 +356,11 @@ $(function () {
 
                 $(widget[i]).dblclick(bringtofront);
                 createWidget(widget[i]);
+                setDepthFront(widget[i]);
             }
 
 
-            $('.existing-widget').removeClass("selected");  
+            $('.selected').removeClass("selected");  
 
         },
     });
@@ -350,7 +411,8 @@ $(function () {
                 $(widget).css('width', 150);
                 $(widget).css('height', 75);
 
-                $(widget).find('span').dblclick(makeEditable);
+                $(widget).find('.text').dblclick(makeEditable);
+                $(widget).find('.edit-list').dblclick(makeListEditable);
 
                 $(widget).draggable({
                     grid: [ 25, 25 ] ,
@@ -390,8 +452,8 @@ $(function () {
 
                 //select and focusout
                 $(widget).click(function(event){
-                    $('html').one('click',function(){
-                        $('.existing-widget').removeClass("selected");
+                    $('#canvas').one('click',function(){
+                        $('.selected').removeClass("selected");
                     });
                     event.stopPropagation();
                     $(this).addClass("selected");
@@ -507,6 +569,7 @@ $(function () {
                 });
 
                 createWidget(widget);
+                setDepthFront(widget);
             }
             else{
                 widget = $(ui.draggable);

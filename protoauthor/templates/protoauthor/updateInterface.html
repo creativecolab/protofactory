@@ -12,9 +12,12 @@
 </div>
 
 <div id="palette">
+
     <div class="draggable-widget">
-        <div class="widget-content">
-            <span>Text Label</span>
+        <div class="widget-content table">
+            <div class="vcenter hcenter full-sized">
+                <div class="text">Text Label</div>
+            </div>
         </div>
     </div>
 
@@ -36,7 +39,7 @@
         <div class="widget-content">
             <div class="full-sized input-box-background">
                 <div class="full-sized">
-                    <span>Input box</span>
+                    <div class="text">Input box</div>
                 </div>
             </div>
         </div>
@@ -45,9 +48,9 @@
     <div class="draggable-widget">
         <div class="widget-content">
             <div class="white-background full-sized">
-                <div class="full-sized button-background">
-                    <div class="center-text">
-                        <span>Button</span>
+                <div class="full-sized button-background table">
+                    <div class="vcenter hcenter full-sized">
+                        <div class="text">Button</div>
                     </div>
                 </div>
             </div>
@@ -58,9 +61,9 @@
         <div class="widget-content">
             <div class="white-background full-sized">
                 <div class="droplist-background">
-                    <div class="droplist-left">
-                        <div class="center-text">
-                            <span>Drop List</span>
+                    <div class="droplist-left table">
+                        <div class="vcenter hcenter full-sized">
+                            <div class="text">Drop List</div>
                         </div>
                     </div>
                 </div>
@@ -70,9 +73,7 @@
 
     <div class="draggable-widget" >
         <div class="widget-content">
-            <ul class="full-sized">
-                <li class="full-sized"><span>List</span></li>
-            </ul>
+            <ul class="edit-list"><li>List</li></ul>
         </div>
     </div>
 
@@ -81,12 +82,13 @@
             <div class="iphone-background full-sized"></div>
         </div>
     </div>	
-    
+
     <div class="draggable-widget" id="addmyown">
         <div class="widget-content">
             <img class="widget" id="addown" src="http://pb-i4.s3.amazonaws.com/photos/365451-1405864976-0.jpg">
         </div>
     </div>	
+
 
     <!-- NOT CONFIGURED CORRECTLY -->
 
@@ -152,18 +154,15 @@
 </div>	
 
 <div id="trash">
-    <img src="http://2.bp.blogspot.com/_EDGT2Qfb0Q4/RnxCiO6PVGI/AAAAAAAAAAc/5LEXbhXW0rU/s320/trashfull.png">
 </div>
 
 <div id="dialog" title="User define"></div>
 
-<br/>
-<br/>
-
+<div class="clear"></div>
 
 <div id="canvas" class="ui-widget-content">
     {% for widget in widgets %}
-    <div class="widget existing-widget draggable-widget" widget-id="{{widget.pk }}" style="position: absolute; left:{{ widget.left }}; top:{{ widget.top }}; width:{{widget.width}}; height:{{widget.height}}">
+    <div class="existing-widget draggable-widget" widget-id="{{widget.pk }}" style="position: absolute; left:{{ widget.left }}; top:{{ widget.top }}; width:{{widget.width}}; height:{{widget.height}}">
         {{ widget.value|safe }}
     </div>
     {% endfor %}
