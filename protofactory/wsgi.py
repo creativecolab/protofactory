@@ -16,7 +16,7 @@ import sys
 
 # Configure PYTHONPATH
 paths = ["/home/cmaclell/protofactory/protofactory/",
-         "/home/cmaclell/protofactory/protoauthor/",
+         "/home/cmaclell/protofactorym/protoauthor/",
          "/home/cmaclell/protofactory/"]
        #"/var/venv/main_site/lib/python2.7/site-packages"]
 
