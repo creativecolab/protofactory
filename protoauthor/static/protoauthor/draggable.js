@@ -28,6 +28,7 @@ function createWidget(widget){
     if (vals[3] == vals[vals.length-4]){
         prefix = vals[3] + "/";
     }
+    console.log(prefix);
     interface_id = vals[vals.length - 2];
     $.ajax({
         type: "POST",
