@@ -4,20 +4,20 @@
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 <script src="{% static 'protoauthor/train.js' %}"></script>
 <script>
-$(function(){
-    $('input').prop('disabled', false);
-    $('button').prop('disabled', false);
-});
+    $(function(){
+        $('input').prop('disabled', false);
+        $('button').prop('disabled', false);
+    });
 </script>
 <link rel="stylesheet" type="text/css" href="{% static 'protoauthor/style.css' %}">
 
 <a href="/">Back</a><br/>
 
 <div id="droppable" class="ui-widget-content">
-{% for widget in widgets %}
-<div widget-id="{{widget.pk }}" style="position: absolute; left:{{ widget.left }}; top:{{ widget.top }}; width:{{widget.width}}; height:{{widget.height}}">
-    {{ widget.value|safe }}
-</div>
-{% endfor %}
+    {% for widget in widgets %}
+    <div widget-id="{{widget.pk }}" style="position: absolute; left:{{ widget.left }}; top:{{ widget.top }}; width:{{widget.width}}; height:{{widget.height}}">
+        {{ widget.value|safe }}
+    </div>
+    {% endfor %}
 
 </div>
