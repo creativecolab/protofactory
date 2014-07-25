@@ -11,7 +11,7 @@
 </script>
 <link rel="stylesheet" type="text/css" href="{% static 'protoauthor/style.css' %}">
 
-<a href="/">Back</a><br/>
+<a href="{% url 'index' %}">Back</a><br/>
 
 <div id="droppable" class="ui-widget-content">
     {% for widget in widgets %}
