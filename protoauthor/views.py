@@ -6,6 +6,9 @@ from django.template.defaulttags import csrf_token
 from protoauthor.models import Interface
 from protoauthor.models import Widget
 
+def draggable(request):
+    context = {'www-root': '/protofactory/'}
+    return render(request, 'protoauthor/draggable.js', context)
 
 def index(request):
     interfaces = Interface.objects.all()

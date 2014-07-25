@@ -27,7 +27,7 @@ function createWidget(widget){
     interface_id = vals[vals.length - 2];
     $.ajax({
         type: "POST",
-        url: "/createWidget/", 
+        url: "createWidget/", 
         data: { 
             interface_id: interface_id, 
             value: $(widget).find(".widget")[0].outerHTML, 
@@ -45,7 +45,7 @@ function createWidget(widget){
 function updateWidget(widget){
     $.ajax({
         type: "POST",
-        url: "/updateWidget/", 
+        url: "updateWidget/", 
         data: { 
             widget_id: $(widget).attr('widget-id'), 
             value: $(widget).find(".widget")[0].outerHTML, 
@@ -62,7 +62,7 @@ function updateWidget(widget){
 function deleteWidget(widget){
     $.ajax({
         type: "POST",
-        url: "/deleteWidget/", 
+        url: "deleteWidget/", 
         data: { widget_id: $(widget).attr('widget-id') },
         success: function(data){
             console.log(data);
