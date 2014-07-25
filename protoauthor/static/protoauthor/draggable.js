@@ -24,10 +24,14 @@ function createWidget(widget){
     // add widget and save position
     var href = $(location).attr("href");
     var vals = href.split('/');
+    prefix = "/";
+    if (vals[3] == vals[vals.length-4]){
+        prefix = vals[3] + "/";
+    }
     interface_id = vals[vals.length - 2];
     $.ajax({
         type: "POST",
-        url: "createWidget/", 
+        url: prefix + "createWidget/", 
         data: { 
             interface_id: interface_id, 
             value: $(widget).find(".widget")[0].outerHTML, 
@@ -43,9 +47,15 @@ function createWidget(widget){
 }
 
 function updateWidget(widget){
+    var href = $(location).attr("href");
+    var vals = href.split('/');
+    prefix = "/";
+    if (vals[3] == vals[vals.length-4]){
+        prefix = vals[3] + "/";
+    }
     $.ajax({
         type: "POST",
-        url: "updateWidget/", 
+        url: prefix + "updateWidget/", 
         data: { 
             widget_id: $(widget).attr('widget-id'), 
             value: $(widget).find(".widget")[0].outerHTML, 
@@ -60,9 +70,15 @@ function updateWidget(widget){
 }
 
 function deleteWidget(widget){
+    var href = $(location).attr("href");
+    var vals = href.split('/');
+    prefix = "/";
+    if (vals[3] == vals[vals.length-4]){
+        prefix = vals[3] + "/";
+    }
     $.ajax({
         type: "POST",
-        url: "deleteWidget/", 
+        url: prefix + "deleteWidget/", 
         data: { widget_id: $(widget).attr('widget-id') },
         success: function(data){
             console.log(data);
