@@ -24,6 +24,9 @@ body {
     vertical-align: middle;
 }
 
+.text{
+min-height:10px;
+}
 .hcenter{
     text-align: center;
 }
@@ -54,10 +57,9 @@ body {
 
 #palette{
     width:95%;
-    height:85px;
+    height:90px;
     float:left;
     background-color:grey;
-    overflow:scroll;
     display:inline;
     background-color: white;
 }
@@ -66,7 +68,7 @@ body {
     position:relative;
     width: 100%;
     //top: 0%;
-    min-height: 100%;
+    min-height: 80%;
     //background-color:transparent;
     background-image: linear-gradient(0deg, transparent 24%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1)26%, transparent 27%, transparent 74%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1)76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1)26%, transparent 27%, transparent 74%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1) 76%, transparent 77%, transparent);
     background-size:50px 50px;
@@ -75,6 +77,21 @@ body {
     border-top-width: 5px;
 
 }
+
+.description{
+    display:none;
+    position:relative;
+	left:1000px;
+    top:-30px;
+    width:200px;
+    height:100px;
+	font-size:18px;
+	color:#6495ED;
+	opacity:0.9;
+   
+}
+
+
 
 .white-background{
     background-color: white;
@@ -109,6 +126,7 @@ body {
     background-position:center; 
     background-size:100% 100%;
     background-color:transparent;
+	
 }
 
 .edit-list{
@@ -118,6 +136,19 @@ body {
 .widget-content{
     width: 100%;
     height: 100%;
+}
+
+.handle{
+  
+   width:10%;
+   height:10%;
+   opacity:1;
+ }
+ 
+.handle:hover{
+  background-color:green;
+  width:10%;
+  height:10%;
 }
 
 .center-text{
@@ -145,7 +176,7 @@ body {
 }
 
 .iphone-background{
-    background-image: url('http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-3.jpg');
+    background-image: url('http://i.imgur.com/pUkhZyQ.png');
     background-repeat: no-repeat;
     background-position:center; 
     background-size:100% 100%;
@@ -181,7 +212,9 @@ body {
     border :dotted 3px red ;
 }
 
-
+#addown{
+  z-index:100;
+}
 
 #text{
     z-index:100;
@@ -195,5 +228,79 @@ input {
     height: 95%;
 }
 
+/*Context menu css */
+.iw-contextMenu {
+	-webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+	border:1px solid #E6E6E6;
+	display:none;
+	z-index:1000;
+	overflow:auto;
+}
+.iw-cm-menu{
+	background:#F4F4F4;
+	color:#333;
+	margin:0px;
+	padding:0px;
+	}
+
+.iw-cm-menu li {
+	list-style:none;
+	padding:3px;
+	padding-left:30px;
+	padding-right:20px;
+	border-bottom:1px solid #CCC;
+	cursor:pointer;
+	position:relative;
+}
+.iw-mOverlay{
+	position:absolute; width:100%; height:100%; top:0px; left:0px;
+	background:#FFF;
+	opacity:.5;
+	}
+.iw-contextMenu li.iw-mDisable {
+	opacity:.3;
+}
+.iw-mSelected {
+	background-color:rgb(0,51,102);
+	color:#F2F2F2;
+}
+.iw-cm-arrow-right {
+	width: 0; 
+	height: 0; 
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent; 
+	border-left:5px solid #333333; 
+	position:absolute;
+	right:3px;
+	top:50%;
+	margin-top:-3px;
+}
+
+.iw-mIcon{
+	width:20px;
+	height:20px;
+	left:0px;
+	top:3px;
+	position:absolute;
+	}
+/*context menu css end */
+#contextmenu{
+	margin:0;
+	padding:0;
+	border: 1px solid #000;
+	background:#ccc;
+	z-index:1000;
+}
+#contextmenu li {
+    list-style-type:none;
+    margin:1px;
+    padding:2px;
+    cursor:pointer;
+}
+#contextmenu li.hover{
+    background: #ddd;
+}
 
 

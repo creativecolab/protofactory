@@ -23,6 +23,7 @@ function csrfSafeMethod(method) {
 }
 // DONE DJANGO HACK
 
+
 function get_interface_id(){
     var href = $(location).attr("href");
     var vals = href.split('/');
@@ -158,10 +159,29 @@ function makeListEditable(event){
     });
 }
 
+
+  
 function setDepthFront(widget){
     $(widget).bringToTop();
     $(widget).find('.widget-content').attr("depth", $(widget).css('z-index'));
 
+}
+
+
+function moveSelected(ol, ot){
+    //console.log("moving to: " + ol + ":" + ot);
+    selectedObjs.each(function(){
+        $this =$(this);
+        var p = $this.position();
+        var l = p.left;
+        var t = p.top;
+       // console.log({id: $this.attr('id'), l: l, t: t});
+
+
+        $this.css('left', l+ol);
+        $this.css('top', t+ot);
+		updateWidget(this);
+    })
 }
 
 function bringtofront(event,ui){
@@ -178,9 +198,28 @@ function changeImage(event,ui)
     }
 }
 
-function bindExisting(){
-    // bind all of the existing widgets and set their z-indexes.
+function func1(e,e1){
+ 
+  setDepthFront($(e1));
+  updateWidget($(e1));
 }
+
+
+
+function checkdelete(e,ui)
+{
+	var e = window.event || e;
+	var code = e.which || e.keyCode;
+	deletewidget=$(".selected");
+	if(code == 46)
+	{
+	 var number=$(".selected").size();
+	 for(var i=0;i<number;i++){
+	 deleteWidget(deletewidget[i]);
+	 }
+	}
+}
+
 
 $(function () {
 
@@ -194,6 +233,10 @@ $(function () {
         aspectRatio:1
     };
     var x=1;
+    var left =[];
+    var top=[];
+    for (var i = 0; i < 20; i++) left[i] = 0;
+	for (var i = 0; i < 20; i++) top[i] = 0;
     var selectone;
     //var addmy=$(".existing-widget").find("#addown");
     //define the arrow picture
@@ -207,7 +250,30 @@ $(function () {
     images[6]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690882-1.jpg";
     images[7]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690882-2.jpg";
     //end define arrows
+    
 
+    
+  //  $(".existing-widget").contextmenu({'bring to front':func1,
+  //                                 },
+  //                                     'right');
+    
+	
+	
+	//descriptions
+	$("#addmyown").mouseover(function(){
+	  
+	    $("#addownex").show();
+	 }).mouseout(function() {
+     $("#addownex").hide();
+     });
+	
+	 $("#iphone-w").mouseover(function(){
+	  
+	    $("#iphonex").show();
+	 }).mouseout(function() {
+     $("#iphonex").hide();
+     });
+	//
 
     $.ajaxSetup({
         crossDomain: false, // obviates need for sameOrigin test
@@ -223,7 +289,9 @@ $(function () {
     $.fn.bringToTop = function() {
         this.css('z-index', ++highest); // increase highest by 1 and set the style
     };
-
+	
+   
+	
     //Handle existing widgets
     $('.existing-widget').find('.text').dblclick(makeEditable);
     $('.existing-widget').find('.edit-list').dblclick(makeListEditable);
@@ -234,19 +302,48 @@ $(function () {
             x=0;
         }
     });
+	
     var contents = $('.existing-widget').find('.widget-content');
     for (var i = 0; i < contents.length; i++){
         $(contents[i]).parent().css('z-index', $(contents[i]).attr('depth'));    
     }
     widgets = $('.existing-widget');
+	//update depth
     for (var i = 0; i < widgets.length; i++){
         if ($(widgets[i]).css('z-index') && parseInt($(widgets[i]).css('z-index')) > highest){
             highest = parseInt($(widgets[i]).css('z-index'));
         }
     }
+	
 
+    
+	
+	//rotate
     $('.existing-widget').draggable({
-        revert: function(event){
+        start: function(event, ui) {
+        //get all selected...
+        if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
+        else {
+            selectedObjs = $(ui.helper);
+            $('.selected').removeClass('selected')
+             }
+        },
+        drag: function(event, ui) {
+            var currentLoc = $(this).position();
+            var prevLoc = $(this).data('prevLoc');
+            if (!prevLoc) {
+            prevLoc = ui.originalPosition;
+        }
+
+            var offsetLeft = currentLoc.left-prevLoc.left;
+            var offsetTop = currentLoc.top-prevLoc.top;
+
+            moveSelected(offsetLeft, offsetTop);
+            $(this).data('prevLoc', currentLoc);
+			updateWidget(this);
+        },
+		
+		revert: function(event){
             if (!event){
                 deleteWidget(this);
             }
@@ -296,11 +393,19 @@ $(function () {
     $('#canvas').click(function(event){
         $('.selected').removeClass("selected");
     });
+	
+	
     $(".existing-widget").click(function(event){
         event.stopPropagation();
+		if(!event.ctrlKey){
+               $('.selected').removeClass("selected");
+            }
+		
         $(this).addClass("selected");
     });
     //select and focusout ends
+    document.onkeydown = checkdelete;
+
 
     // copy and paste
     $("html").bind({
@@ -309,44 +414,82 @@ $(function () {
             //alert('copy behaviour detected!');
             //console.log($(this));
             widget = $(".selected").clone();
+			
+			left=[];
+			top=[];
             number=$('.selected').size();
         },
         paste: function(){
-            //alert('paste detect');
             var i=0;
+			 
             for(i=0;i<number;i++){
-                $("#canvas").append(widget[i]);
+			    var widgetnew=$(widget[i]).clone();
+                $("#canvas").append(widgetnew);
                 //$(widget[i]).addClass('existing-widget');
-                $(widget[i]).click(function(event){
+                $(widgetnew).click(function(event){
                     event.stopPropagation();
+					if(!event.ctrlKey){
+               $('.selected').removeClass("selected");
+            }
                     $(this).addClass("selected");
                 });
+            //    $(widget[i]).removeClass('draggable-widget');
+                $(widgetnew).removeClass('ui-draggable');
+                $(widgetnew).removeClass('ui-resizable');
+                $(widgetnew).find('.ui-resizable-handle').remove();
+                console.log($(widgetnew));
+				
+				if(!left[i]){
+				left[i]=$(widgetnew).position().left;
+				top[i]=$(widgetnew).position().top;
+				left[i]=left[i]-20;
+				top[i]=top[i]-20;
+				}
+                $(widgetnew).css('position', 'absolute');
+                $(widgetnew).css('top', top[i]);
+                $(widgetnew).css('left',left[i]);
+				left[i]=left[i]-20;
+			     top[i]=top[i]-20;
+			
+				console.log($(widgetnew));
+            
+                $(widgetnew).find('.text').dblclick(makeEditable);
+                $(widgetnew).find('.edit-list').dblclick(makeListEditable);
+                $(widgetnew).contextmenu({'bring to front':func1,
+                                        },
+                                       'right');
+                $(widgetnew).draggable({
+				    start: function(event, ui) {
+                     //get all selected...
+                      if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
+                      else {
+                      selectedObjs = $(ui.helper);
+                      $('.selected').removeClass('selected')
+                           }
+                      },
+                    drag: function(event, ui) {
+                          var currentLoc = $(this).position();
+                          var prevLoc = $(this).data('prevLoc');
+                          if (!prevLoc) {
+                             prevLoc = ui.originalPosition;
+                             }
 
+                          var offsetLeft = currentLoc.left-prevLoc.left;
+                          var offsetTop = currentLoc.top-prevLoc.top;
 
-                $(widget[i]).removeClass('draggable-widget');
-                $(widget[i]).removeClass('ui-draggable');
-                $(widget[i]).removeClass('ui-resizable');
-                $(widget[i]).find('.ui-resizable-handle').remove();
-                console.log($(widget[i]));
-                $(widget[i]).css('position', 'absolute');
-                $(widget[i]).css('top',$(widget[i]).position().top - 20-i*3);
-                $(widget[i]).css('left',$(widget[i]).position().left - 20-i*3);
-                //$(widget[i]).css('width', $(widget[i]).width());
-                //$(widget[i]).css('height', 75);
-
-                $(widget[i]).find('.text').dblclick(makeEditable);
-                $(widget[i]).find('.edit-list').dblclick(makeListEditable);
-
-                $(widget[i]).draggable({
+                          moveSelected(offsetLeft, offsetTop);
+                         $(this).data('prevLoc', currentLoc);
+                			updateWidget(this);
+                       },
                     revert: function(event){
                         if (!event){
-                            deleteWidget(this);
+                           deleteWidget(this);
                         }
                         return false;
                     }
                 });
 
-                $(widget[i]).resizable({
+                $(widgetnew).resizable({
 
                     stop: function(event, ui){
 
@@ -354,13 +497,14 @@ $(function () {
                     }
                 });
 
-                $(widget[i]).dblclick(bringtofront);
-                createWidget(widget[i]);
-                setDepthFront(widget[i]);
+                $(widgetnew).dblclick(bringtofront);
+                createWidget(widgetnew);
+                setDepthFront(widgetnew);
+			
             }
 
 
-            $('.selected').removeClass("selected");  
+                $('.selected').removeClass("selected");  
 
         },
     });
@@ -394,6 +538,8 @@ $(function () {
 
 
 
+  
+
     // Make canvas droppable
     $("#canvas").droppable({
         drop: function(event, ui) {
@@ -408,14 +554,46 @@ $(function () {
                 $(widget).css('position', 'absolute');
                 $(widget).css('top', ui.position.top - $(this).position().top - 13);
                 $(widget).css('left', ui.position.left - $(this).position().left - 13);
-                $(widget).css('width', 150);
-                $(widget).css('height', 75);
+				what=$(widget).find("#iphone")
+				if(what.hasClass("iphone")){
+				$(widget).css('width', 160);
+				$(widget).css('height', 300);
+				}
+			    else{	
+			
+				$(widget).css('width', 150);
+				$(widget).css('height', 65);
+			   }
 
                 $(widget).find('.text').dblclick(makeEditable);
                 $(widget).find('.edit-list').dblclick(makeListEditable);
-
+                $(widget).contextmenu({'bring to front':func1,
+                                        },
+                                       'right');
                 $(widget).draggable({
-                    grid: [ 25, 25 ] ,
+                    
+					start: function(event, ui) {
+                     //get all selected...
+                      if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
+                      else {
+                      selectedObjs = $(ui.helper);
+                      $('.selected').removeClass('selected')
+                           }
+                      },
+                    drag: function(event, ui) {
+                          var currentLoc = $(this).position();
+                          var prevLoc = $(this).data('prevLoc');
+                          if (!prevLoc) {
+                             prevLoc = ui.originalPosition;
+                             }
+
+                          var offsetLeft = currentLoc.left-prevLoc.left;
+                          var offsetTop = currentLoc.top-prevLoc.top;
+
+                          moveSelected(offsetLeft, offsetTop);
+                         $(this).data('prevLoc', currentLoc);
+                			updateWidget(this);
+                       },
                     revert: function(event){
                         if (!event){
                             deleteWidget(this);
@@ -456,6 +634,10 @@ $(function () {
                         $('.selected').removeClass("selected");
                     });
                     event.stopPropagation();
+					if(!event.ctrlKey){
+                    $('.selected').removeClass("selected");
+                   }
+					
                     $(this).addClass("selected");
                 });
                 //select and focusout ends
@@ -578,3 +760,117 @@ $(function () {
         }
     });
 });
+
+/* contextmenu - jQuery plugin
+ * http://www.smartango.com/articles/jquery-context-menu
+ * Copyright (c) 2010 Daniele Cruciani
+ * Dual licensed under MIT and GPL licenses
+ */
+
+;(function($) {
+    $.contextmenu='contextmenu';
+    function removemenu(e){
+	var el = e.target;
+	if( $(el).parent('#'+$.contextmenu).size()==0) {
+	    $('#'+$.contextmenu).remove();
+	}
+	return false;
+    }
+    function firemenu(e,menu,el) {
+	removemenu(e);
+	$(el).data('clickphase',true);
+	setTimeout(function(){$(el).removeData('clickphase');},300);
+	var m = $('<ul id="'+$.contextmenu+'">');
+	$.each(menu, function(n,a) {
+	    if(typeof a == 'function') {
+		m.append($("<li>").html(n).hover(
+		    function(){
+			$(this).addClass("hover");
+		    },
+		    function(){
+			$(this).removeClass("hover");
+		    })
+			 .click(
+			     function(evt){
+				 $('#'+$.contextmenu).remove();
+				 $(el).data('served',true);
+				 a(evt,el);
+				 $(el).removeData('served');
+			     })
+			 .mouseup(
+			     function(evt){
+				 if($(el).data('clickphase')) return true;
+				 $('#'+$.contextmenu).remove();
+				 $(el).data('served',true);
+				 a(evt,el);
+				 $(el).removeData('served');
+			     })
+			);
+	    }
+	});
+	var pageX = e.pageX;
+	var pageY = e.pageY;
+	if(window.event) {
+	    pageX = $(window).scrollLeft()+e.clientX;
+	    pageY = $(window).scrollTop()+e.clientY;
+	}
+	m.css({'position':'absolute',top:pageY-3,left:pageX-3});
+	$("body").append(m);
+	document.getElementById($.contextmenu).oncontextmenu=function(){return false;};
+	$("body").one('click',removemenu);
+	$(document).one('mousedown',removemenu);
+    }
+    $.fn.contextmenu=function(menu,mode,timeout) {
+	var els = this;
+	$.each(els, function(i,el) {
+	    switch(mode) {
+	    case 'right':
+		el.oncontextmenu=function(e){if(e && !e.bubbles) {return true;} if(!e) e=window.event; if(!e.target) e.target = e.srcElement; firemenu(e,menu,el); if(window.event) window.event.cancelBubble = true; else e.stopPropagation();
+return false;};
+		break;
+	    case 'hold':
+		var timeoutfun = null;
+		$(el).mousedown(function(e){
+		    if(!e.bubbles) return;
+		    if(e.button == 2) return ;
+		    timeoutfun = setTimeout(function() {
+			$(el).data('menu',true);
+			firemenu(e,menu,el);
+			return false;
+		    },timeout);
+		}).mouseup(function(e){
+		    clearTimeout(timeoutfun);
+		    if($(el).data('menu')) {
+		    }
+		}).bind('dragstart',function(e){
+		    clearTimeout(timeoutfun);
+		    if($(el).data('menu')==true) return false;
+		    return true;
+		});
+		break;
+	    case 'hover':
+		var timeoutfun = null;
+		$(el).mouseover(function(e){
+		    if(!e.bubbles) return;
+		    if($('#'+$.contextmenu).size()>0) return ;
+		    if($(el).data('served')==true) return ;
+		    timeoutfun = setTimeout(function() {
+			$(el).data('menu',true);
+			firemenu($(el).data('e'),menu,el);
+		    },timeout);
+		    return false;
+		}).mousemove(function(e){
+		    $(el).data('e',e);
+		}).mouseout(function(e){
+		    clearTimeout(timeoutfun);
+		    $(el).removeData('e');
+		}).mousedown(function(e){
+		    clearTimeout(timeoutfun);
+		    $(el).removeData('e');
+		});
+		break;
+	    }
+	    return $(this);
+	});
+    }
+})(jQuery);
