@@ -204,6 +204,41 @@ function func1(e,e1){
   updateWidget($(e1));
 }
 
+/*function func2(e,e2){
+var a=0;
+$(e2).imgAreaSelect({
+        handles: true,
+		onSelectEnd: function (img, selection) {
+        $('.imgareaselect-selection').css("opacity","0");
+		$('.imgareaselect-outer').css("opacity",'1');
+		
+	}   
+}); 
+$(e2).draggable( "disable" );
+
+var e = window.event || e;
+var code = e.which || e.keyCode;
+if(code == 13) {
+		alert('ddd');
+		var back=$(e2).find("#addown");
+		back[0].setAttribute("style","width:40px;height:50px;margin-Left:-10px;margin-Right:-10px;");
+ }
+
+}
+*/
+
+function func3(e,e3){
+         var textchange=$(e3).find(".text");
+         var fontsize = prompt('input the font-size (px) :', '15');
+
+              if (fontsize) {
+                console.log("Your fontsize is: " +  fontsize);
+                textchange.attr("style","font-size:"+fontsize+'px');
+              }
+             else {console.log("You pressed Cancel or no value was entered!");
+               }
+             updateWidget($(e3));
+}
 
 
 function checkdelete(e,ui)
@@ -213,6 +248,7 @@ function checkdelete(e,ui)
 	deletewidget=$(".selected");
 	if(code == 46)
 	{
+	
 	 var number=$(".selected").size();
 	 for(var i=0;i<number;i++){
 	 deleteWidget(deletewidget[i]);
@@ -220,6 +256,19 @@ function checkdelete(e,ui)
 	}
 }
 
+/*function checkenter(e,ui)
+{
+	var e = window.event || e;
+	var code = e.which || e.keyCode;
+	if(code == 13)
+	{
+	 var number=$(".selected").size();
+	 for(var i=0;i<number;i++){
+	 deleteWidget(deletewidget[i]);
+	 }
+	}
+}
+*/
 
 $(function () {
 
@@ -253,11 +302,7 @@ $(function () {
     
 
     
-  //  $(".existing-widget").contextmenu({'bring to front':func1,
-  //                                 },
-  //                                     'right');
-    
-	
+
 	
 	//descriptions
 	$("#addmyown").mouseover(function(){
@@ -315,6 +360,27 @@ $(function () {
         }
     }
 	
+   //contextmenu
+   /*
+   changef=$('.existing-widget').find('.text');
+   for(var i=0;i<changef.length;i++){
+   if($(changef[i]).hasClass('text')){
+   
+   $(changef[i]).parents('.draggable-widget').contextmenu({'Bringtofront':func1,
+						    'Change-Font':func3},
+                            'right');
+	    }
+    }	
+	add=$('.existing-widget').find('#addown');
+	for(var j=0;j<add.length;j++){
+	$(add[i]).parents('.draggable-widget').contextmenu({'Bringtofront':func1,
+									   'Crop':func3},
+                                       'right');
+        }
+     */
+    		
+   
+   
 
     
 	
@@ -340,7 +406,7 @@ $(function () {
 
             moveSelected(offsetLeft, offsetTop);
             $(this).data('prevLoc', currentLoc);
-			updateWidget(this);
+			//updateWidget(this);
         },
 		
 		revert: function(event){
@@ -348,7 +414,10 @@ $(function () {
                 deleteWidget(this);
             }
             return false;
-        }
+        },
+		stop: function(event,ui){
+		updateWidget(this);
+		}
     });
 
 
@@ -405,7 +474,7 @@ $(function () {
     });
     //select and focusout ends
     document.onkeydown = checkdelete;
-
+    
 
     // copy and paste
     $("html").bind({
@@ -554,7 +623,7 @@ $(function () {
                 $(widget).css('position', 'absolute');
                 $(widget).css('top', ui.position.top - $(this).position().top - 13);
                 $(widget).css('left', ui.position.left - $(this).position().left - 13);
-				what=$(widget).find("#iphone")
+				what=$(widget).find("#iphone");
 				if(what.hasClass("iphone")){
 				$(widget).css('width', 160);
 				$(widget).css('height', 300);
@@ -567,10 +636,22 @@ $(function () {
 
                 $(widget).find('.text').dblclick(makeEditable);
                 $(widget).find('.edit-list').dblclick(makeListEditable);
-                $(widget).contextmenu({'bring to front':func1,
-                                        },
+				if($(widget).hasClass('changefont')){
+                $(widget).contextmenu({'Bringtofront':func1,
+									   'Change-Font':func3},
                                        'right');
+				}  
+				add=$(widget).find('#addown');
+				if(add.hasClass('crop')){
+		
+                $(widget).contextmenu({'Bringtofront':func1,
+									   'Crop':func3},
+                                       'right');
+
+                }				
+									 
                 $(widget).draggable({
+
                     
 					start: function(event, ui) {
                      //get all selected...
@@ -594,6 +675,7 @@ $(function () {
                          $(this).data('prevLoc', currentLoc);
                 			updateWidget(this);
                        },
+
                     revert: function(event){
                         if (!event){
                             deleteWidget(this);
@@ -642,79 +724,7 @@ $(function () {
                 });
                 //select and focusout ends
 
-                // copy and paste
-                /*
-                   $(widget).bind({
-                   copy: function(){
-                   alert('copy behaviour detected!');
-                //console.log($(this));
-                widget = $(".selected").clone();
-                number=$('.selected').size();
-                },
-                paste: function(){
-                alert('paste detect');
-                var i=0;
-                for(i=0;i<number;i++){
-                $("#droppable").append(widget[i]);
-                $('#droppable .draggable-widget').addClass('existing-widget');
-                $(widget[i]).css('position', 'absolute');
-                $(widget[i]).css('top',$('.selected').position().top - 20-i*3);
-                $(widget[i]).css('left',$('.selected').position().left - 20-i*3);
-                $(widget[i]).css('width', 150);
-                $(widget[i]).css('height', 75);
-
-                $(widget[i]).find('span').dblclick(makeEditable);
-
-                $(widget[i]).draggable({
-                revert: function(event){
-                if (!event){
-                deleteWidget(this);
-                }
-                return false;
-                }
-                });
-
-                $(widget[i]).resizable({
-
-                resize:function(event,ui){
-                if(event.ctrlKey){
-                ctrlpress=1;
-                }
-                if(event.shirtKey){
-                $(widget[i]).resizable(settings);
-                }
-                updateWidget(this);
-
-                },
-                stop: function(event, ui){
-                var textheight=parseFloat($(this).css('height'));
-                var textwidth=parseFloat($(this).css('width'));
-                var textmin=Math.max(textheight,textwidth);
-                var ratio=textmin/100;                    //original wideget is 100px*100px
-                spantext=$(this).find("span");
-                if(!spantext.hasClass("text")){
-
-                if(!ctrlpress){
-                var k='font-size:'+(40*ratio)+'px';
-
-                spantext[0].setAttribute("style",k);
-                }
-                }
-                ctrlpress=0;
-                updateWidget(this);
-                }
-
-                });
-
-                $(widget[i]).dblclick(bringtofront);
-                createWidget(widget[i]);
-                }
-                $('.existing-widget').removeClass("selected"); 
-                },
-                });
-                */
-                //copy and paste ends
-
+               
 
                 // change text for new text label
                 $(widget).resizable({

@@ -2,10 +2,12 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-<script src="{% static 'protoauthor/draggable.js' %}"></script>
+<script src="{% static 'protoauthor/jquery.imgareaselect.min.js'%}"></script>
+<script src="{% static 'protoauthor/jquery.imgareaselect.pack.js'%}"></script>
+<script src="{% static 'protoauthor/jquery.imgareaselect.js'%}"></script>
+<script src="{% static 'protoauthor/draggable.js'%}"></script>
 <script type="text/javascript" src="http://www.javascripttoolbox.com/libsource.php/contextmenu/source/jquery.contextmenu.js"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'protoauthor/style.css' %}">
-<script type="text/javascript" src="http://jqueryrotate.googlecode.com/svn/trunk/jQueryRotate.js"></script>
 <script type="text/javascript" src="http://jqueryrotate.googlecode.com/svn/trunk/jQueryRotate.js"></script>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
@@ -15,7 +17,7 @@
 </div>
 <div id="palette">
 
-    <div class="draggable-widget">
+    <div class="draggable-widget changefont">
         <div class="widget-content table">
             <div class="vcenter hcenter full-sized">
                 <div class="text">Text Label</div>
@@ -38,7 +40,7 @@
     </div>
     -->
 
-    <div class="draggable-widget">
+    <div class="draggable-widget changefont">
         <div class="widget-content">
             <div class="full-sized input-box-background">
                 <div class="full-sized">
@@ -48,7 +50,7 @@
         </div>
     </div>
 
-    <div class="draggable-widget">
+    <div class="draggable-widget changefont">
         <div class="widget-content">
             <div class="white-background full-sized">
                 <div class="full-sized button-background table">
@@ -60,7 +62,7 @@
         </div>
     </div>	
 
-    <div class="draggable-widget" >
+    <div class="draggable-widget changefont" >
         <div class="widget-content">
             <div class="white-background full-sized">
                 <div class="droplist-background">
@@ -87,10 +89,9 @@
     </div>	
 
     <div class="draggable-widget" id="addmyown">
-	    
-        <div class="widget-content">
-            <img class="widget" id="addown" src="http://i.imgur.com/aMOPVwK.png">
-        </div>
+       <div class="widget-content">
+            <img class="widget crop" id="addown" src="http://i.imgur.com/aMOPVwK.png" >
+      </div>
     </div>	
     
     <div class="description" id="addownex"> Drag it down on the canvas and double-click to change the picture</div>
