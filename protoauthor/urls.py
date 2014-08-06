@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'^createWidget/$', views.createWidget, name='createWidget'),
     url(r'^updateWidget/$', views.updateWidget, name='updateWidget'),
     url(r'^deleteWidget/$', views.deleteWidget, name='deleteWidget'),
+    url(r'^undoRedo/$', views.undoRedo, name='undoRedo'),
 )

@@ -23,6 +23,33 @@ function csrfSafeMethod(method) {
 }
 // DONE DJANGO HACK
 
+function undoRedo(is_redo){
+    if (is_redo != "True"){
+        is_redo = "False";
+    }
+
+    var prefix = get_site_prefix();
+    var interface_id = get_interface_id();
+    $.ajax({
+        type: "POST",
+        url: prefix + "undoRedo/", 
+        data: { 
+            interface_id: interface_id, 
+            is_redo: is_redo
+        },
+        success: function(data){
+            console.log(data);
+        },
+    });
+}
+
+function undo(){
+    undoRedo("False");
+}
+
+function redo(){
+    undoRedo("True");
+}
 
 function get_interface_id(){
     var href = $(location).attr("href");
@@ -160,7 +187,7 @@ function makeListEditable(event){
 }
 
 
-  
+
 function setDepthFront(widget){
     $(widget).bringToTop();
     $(widget).find('.widget-content').attr("depth", $(widget).css('z-index'));
@@ -169,18 +196,18 @@ function setDepthFront(widget){
 
 
 function moveSelected(ol, ot){
-    //console.log("moving to: " + ol + ":" + ot);
+    console.log("moving to: " + ol + ":" + ot);
     selectedObjs.each(function(){
         $this =$(this);
         var p = $this.position();
         var l = p.left;
         var t = p.top;
-       // console.log({id: $this.attr('id'), l: l, t: t});
+        // console.log({id: $this.attr('id'), l: l, t: t});
 
 
         $this.css('left', l+ol);
         $this.css('top', t+ot);
-		updateWidget(this);
+        //updateWidget(this);
     })
 }
 
@@ -199,76 +226,76 @@ function changeImage(event,ui)
 }
 
 function func1(e,e1){
- 
-  setDepthFront($(e1));
-  updateWidget($(e1));
+
+    setDepthFront($(e1));
+    updateWidget($(e1));
 }
 
 /*function func2(e,e2){
-var a=0;
-$(e2).imgAreaSelect({
-        handles: true,
-		onSelectEnd: function (img, selection) {
-        $('.imgareaselect-selection').css("opacity","0");
-		$('.imgareaselect-outer').css("opacity",'1');
-		
-	}   
-}); 
-$(e2).draggable( "disable" );
+  var a=0;
+  $(e2).imgAreaSelect({
+  handles: true,
+  onSelectEnd: function (img, selection) {
+  $('.imgareaselect-selection').css("opacity","0");
+  $('.imgareaselect-outer').css("opacity",'1');
 
-var e = window.event || e;
-var code = e.which || e.keyCode;
-if(code == 13) {
-		alert('ddd');
-		var back=$(e2).find("#addown");
-		back[0].setAttribute("style","width:40px;height:50px;margin-Left:-10px;margin-Right:-10px;");
- }
+  }   
+  }); 
+  $(e2).draggable( "disable" );
 
-}
-*/
+  var e = window.event || e;
+  var code = e.which || e.keyCode;
+  if(code == 13) {
+  alert('ddd');
+  var back=$(e2).find("#addown");
+  back[0].setAttribute("style","width:40px;height:50px;margin-Left:-10px;margin-Right:-10px;");
+  }
+
+  }
+  */
 
 function func3(e,e3){
-         var textchange=$(e3).find(".text");
-         var fontsize = prompt('input the font-size (px) :', '15');
+    var textchange=$(e3).find(".text");
+    var fontsize = prompt('input the font-size (px) :', '15');
 
-              if (fontsize) {
-                console.log("Your fontsize is: " +  fontsize);
-                textchange.attr("style","font-size:"+fontsize+'px');
-              }
-             else {console.log("You pressed Cancel or no value was entered!");
-               }
-             updateWidget($(e3));
+    if (fontsize) {
+        console.log("Your fontsize is: " +  fontsize);
+        textchange.attr("style","font-size:"+fontsize+'px');
+    }
+    else {console.log("You pressed Cancel or no value was entered!");
+    }
+    updateWidget($(e3));
 }
 
 
 function checkdelete(e,ui)
 {
-	var e = window.event || e;
-	var code = e.which || e.keyCode;
-	deletewidget=$(".selected");
-	if(code == 46)
-	{
-	
-	 var number=$(".selected").size();
-	 for(var i=0;i<number;i++){
-	 deleteWidget(deletewidget[i]);
-	 }
-	}
+    var e = window.event || e;
+    var code = e.which || e.keyCode;
+    deletewidget=$(".selected");
+    if(code == 46)
+    {
+
+        var number=$(".selected").size();
+        for(var i=0;i<number;i++){
+            deleteWidget(deletewidget[i]);
+        }
+    }
 }
 
 /*function checkenter(e,ui)
-{
-	var e = window.event || e;
-	var code = e.which || e.keyCode;
-	if(code == 13)
-	{
-	 var number=$(".selected").size();
-	 for(var i=0;i<number;i++){
-	 deleteWidget(deletewidget[i]);
-	 }
-	}
-}
-*/
+  {
+  var e = window.event || e;
+  var code = e.which || e.keyCode;
+  if(code == 13)
+  {
+  var number=$(".selected").size();
+  for(var i=0;i<number;i++){
+  deleteWidget(deletewidget[i]);
+  }
+  }
+  }
+  */
 
 $(function () {
 
@@ -285,7 +312,7 @@ $(function () {
     var left =[];
     var top=[];
     for (var i = 0; i < 20; i++) left[i] = 0;
-	for (var i = 0; i < 20; i++) top[i] = 0;
+    for (var i = 0; i < 20; i++) top[i] = 0;
     var selectone;
     //var addmy=$(".existing-widget").find("#addown");
     //define the arrow picture
@@ -299,26 +326,26 @@ $(function () {
     images[6]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690882-1.jpg";
     images[7]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690882-2.jpg";
     //end define arrows
-    
 
-    
 
-	
-	//descriptions
-	$("#addmyown").mouseover(function(){
-	  
-	    $("#addownex").show();
-	 }).mouseout(function() {
-     $("#addownex").hide();
-     });
-	
-	 $("#iphone-w").mouseover(function(){
-	  
-	    $("#iphonex").show();
-	 }).mouseout(function() {
-     $("#iphonex").hide();
-     });
-	//
+
+
+
+    //descriptions
+    $("#addmyown").mouseover(function(){
+
+        $("#addownex").show();
+    }).mouseout(function() {
+        $("#addownex").hide();
+    });
+
+    $("#iphone-w").mouseover(function(){
+
+        $("#iphonex").show();
+    }).mouseout(function() {
+        $("#iphonex").hide();
+    });
+    //
 
     $.ajaxSetup({
         crossDomain: false, // obviates need for sameOrigin test
@@ -334,9 +361,9 @@ $(function () {
     $.fn.bringToTop = function() {
         this.css('z-index', ++highest); // increase highest by 1 and set the style
     };
-	
-   
-	
+
+
+
     //Handle existing widgets
     $('.existing-widget').find('.text').dblclick(makeEditable);
     $('.existing-widget').find('.edit-list').dblclick(makeListEditable);
@@ -347,77 +374,80 @@ $(function () {
             x=0;
         }
     });
-	
+
     var contents = $('.existing-widget').find('.widget-content');
     for (var i = 0; i < contents.length; i++){
         $(contents[i]).parent().css('z-index', $(contents[i]).attr('depth'));    
     }
     widgets = $('.existing-widget');
-	//update depth
+    //update depth
     for (var i = 0; i < widgets.length; i++){
         if ($(widgets[i]).css('z-index') && parseInt($(widgets[i]).css('z-index')) > highest){
             highest = parseInt($(widgets[i]).css('z-index'));
         }
     }
-	
-   //contextmenu
-   /*
-   changef=$('.existing-widget').find('.text');
-   for(var i=0;i<changef.length;i++){
-   if($(changef[i]).hasClass('text')){
-   
-   $(changef[i]).parents('.draggable-widget').contextmenu({'Bringtofront':func1,
-						    'Change-Font':func3},
-                            'right');
-	    }
-    }	
-	add=$('.existing-widget').find('#addown');
-	for(var j=0;j<add.length;j++){
-	$(add[i]).parents('.draggable-widget').contextmenu({'Bringtofront':func1,
-									   'Crop':func3},
-                                       'right');
-        }
-     */
-    		
-   
-   
 
-    
-	
-	//rotate
+    //contextmenu
+    /*
+       changef=$('.existing-widget').find('.text');
+       for(var i=0;i<changef.length;i++){
+       if($(changef[i]).hasClass('text')){
+
+       $(changef[i]).parents('.draggable-widget').contextmenu({'Bringtofront':func1,
+       'Change-Font':func3},
+       'right');
+       }
+       }	
+       add=$('.existing-widget').find('#addown');
+       for(var j=0;j<add.length;j++){
+       $(add[i]).parents('.draggable-widget').contextmenu({'Bringtofront':func1,
+       'Crop':func3},
+       'right');
+       }
+       */
+
+
+
+
+
+
+    //rotate
     $('.existing-widget').draggable({
         start: function(event, ui) {
-        //get all selected...
-        if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
-        else {
-            selectedObjs = $(ui.helper);
-            $('.selected').removeClass('selected')
-             }
+            //get all selected...
+            if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
+            else {
+                selectedObjs = $(ui.helper);
+                $('.selected').removeClass('selected')
+            }
         },
-        drag: function(event, ui) {
-            var currentLoc = $(this).position();
-            var prevLoc = $(this).data('prevLoc');
-            if (!prevLoc) {
+    drag: function(event, ui) {
+        var currentLoc = $(this).position();
+        var prevLoc = $(this).data('prevLoc');
+        if (!prevLoc) {
             prevLoc = ui.originalPosition;
         }
 
-            var offsetLeft = currentLoc.left-prevLoc.left;
-            var offsetTop = currentLoc.top-prevLoc.top;
+        var offsetLeft = currentLoc.left-prevLoc.left;
+        var offsetTop = currentLoc.top-prevLoc.top;
 
-            moveSelected(offsetLeft, offsetTop);
-            $(this).data('prevLoc', currentLoc);
-			//updateWidget(this);
-        },
-		
-		revert: function(event){
-            if (!event){
-                deleteWidget(this);
-            }
-            return false;
-        },
-		stop: function(event,ui){
-		updateWidget(this);
-		}
+        moveSelected(offsetLeft, offsetTop);
+        $(this).data('prevLoc', currentLoc);
+        //updateWidget(this);
+    },
+
+    revert: function(event){
+        if (!event){
+            deleteWidget(this);
+        }
+        return false;
+    },
+    stop: function(event,ui){
+        //$.each(selectedObjs, function(w){
+        //    updateWidget(w);
+        //});
+        updateWidget(this);
+    }
     });
 
 
@@ -431,18 +461,18 @@ $(function () {
         },
         stop: function(event, ui){
             /*
-            var textheight=parseFloat($(this).css('height'));
-            var textwidth=parseFloat($(this).css('width'));
-            var textmin=Math.max(textheight,textwidth);
-            var ratio=textmin/100;                    //original wideget is 100px*100px
-            spantext=$(this).find("span");
+               var textheight=parseFloat($(this).css('height'));
+               var textwidth=parseFloat($(this).css('width'));
+               var textmin=Math.max(textheight,textwidth);
+               var ratio=textmin/100;                    //original wideget is 100px*100px
+               spantext=$(this).find("span");
 
-            if(!spantext.hasClass("text")){
-                if(!ctrlpress){
-                    var k='font-size:'+(40*ratio)+'px';
-                    //     spantext[0].setAttribute("style",k);
-                    //	  $(this).css({'font-size':(40*ratio)+"px"});
-                }
+               if(!spantext.hasClass("text")){
+               if(!ctrlpress){
+               var k='font-size:'+(40*ratio)+'px';
+            //     spantext[0].setAttribute("style",k);
+            //	  $(this).css({'font-size':(40*ratio)+"px"});
+            }
             }
             ctrlpress=0;	    
             */
@@ -462,19 +492,19 @@ $(function () {
     $('#canvas').click(function(event){
         $('.selected').removeClass("selected");
     });
-	
-	
+
+
     $(".existing-widget").click(function(event){
         event.stopPropagation();
-		if(!event.ctrlKey){
-               $('.selected').removeClass("selected");
-            }
-		
+        if(!event.ctrlKey){
+            $('.selected').removeClass("selected");
+        }
+
         $(this).addClass("selected");
     });
     //select and focusout ends
     document.onkeydown = checkdelete;
-    
+
 
     // copy and paste
     $("html").bind({
@@ -483,76 +513,76 @@ $(function () {
             //alert('copy behaviour detected!');
             //console.log($(this));
             widget = $(".selected").clone();
-			
-			left=[];
-			top=[];
+
+            left=[];
+            top=[];
             number=$('.selected').size();
         },
         paste: function(){
             var i=0;
-			 
+
             for(i=0;i<number;i++){
-			    var widgetnew=$(widget[i]).clone();
+                var widgetnew=$(widget[i]).clone();
                 $("#canvas").append(widgetnew);
                 //$(widget[i]).addClass('existing-widget');
                 $(widgetnew).click(function(event){
                     event.stopPropagation();
-					if(!event.ctrlKey){
-               $('.selected').removeClass("selected");
-            }
+                    if(!event.ctrlKey){
+                        $('.selected').removeClass("selected");
+                    }
                     $(this).addClass("selected");
                 });
-            //    $(widget[i]).removeClass('draggable-widget');
+                //    $(widget[i]).removeClass('draggable-widget');
                 $(widgetnew).removeClass('ui-draggable');
                 $(widgetnew).removeClass('ui-resizable');
                 $(widgetnew).find('.ui-resizable-handle').remove();
                 console.log($(widgetnew));
-				
-				if(!left[i]){
-				left[i]=$(widgetnew).position().left;
-				top[i]=$(widgetnew).position().top;
-				left[i]=left[i]-20;
-				top[i]=top[i]-20;
-				}
+
+                if(!left[i]){
+                    left[i]=$(widgetnew).position().left;
+                    top[i]=$(widgetnew).position().top;
+                    left[i]=left[i]-20;
+                    top[i]=top[i]-20;
+                }
                 $(widgetnew).css('position', 'absolute');
                 $(widgetnew).css('top', top[i]);
                 $(widgetnew).css('left',left[i]);
-				left[i]=left[i]-20;
-			     top[i]=top[i]-20;
-			
-				console.log($(widgetnew));
-            
+                left[i]=left[i]-20;
+                top[i]=top[i]-20;
+
+                console.log($(widgetnew));
+
                 $(widgetnew).find('.text').dblclick(makeEditable);
                 $(widgetnew).find('.edit-list').dblclick(makeListEditable);
                 $(widgetnew).contextmenu({'bring to front':func1,
-                                        },
-                                       'right');
+                },
+                'right');
                 $(widgetnew).draggable({
-				    start: function(event, ui) {
-                     //get all selected...
-                      if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
-                      else {
-                      selectedObjs = $(ui.helper);
-                      $('.selected').removeClass('selected')
-                           }
-                      },
+                    start: function(event, ui) {
+                        //get all selected...
+                        if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
+                        else {
+                            selectedObjs = $(ui.helper);
+                            $('.selected').removeClass('selected')
+                        }
+                    },
                     drag: function(event, ui) {
-                          var currentLoc = $(this).position();
-                          var prevLoc = $(this).data('prevLoc');
-                          if (!prevLoc) {
-                             prevLoc = ui.originalPosition;
-                             }
+                        var currentLoc = $(this).position();
+                        var prevLoc = $(this).data('prevLoc');
+                        if (!prevLoc) {
+                            prevLoc = ui.originalPosition;
+                        }
 
-                          var offsetLeft = currentLoc.left-prevLoc.left;
-                          var offsetTop = currentLoc.top-prevLoc.top;
+                        var offsetLeft = currentLoc.left-prevLoc.left;
+                        var offsetTop = currentLoc.top-prevLoc.top;
 
-                          moveSelected(offsetLeft, offsetTop);
-                         $(this).data('prevLoc', currentLoc);
-                			updateWidget(this);
-                       },
+                        moveSelected(offsetLeft, offsetTop);
+                        $(this).data('prevLoc', currentLoc);
+                        updateWidget(this);
+                    },
                     revert: function(event){
                         if (!event){
-                           deleteWidget(this);
+                            deleteWidget(this);
                         }
                         return false;
                     }
@@ -569,11 +599,11 @@ $(function () {
                 $(widgetnew).dblclick(bringtofront);
                 createWidget(widgetnew);
                 setDepthFront(widgetnew);
-			
+
             }
 
 
-                $('.selected').removeClass("selected");  
+            $('.selected').removeClass("selected");  
 
         },
     });
@@ -607,7 +637,7 @@ $(function () {
 
 
 
-  
+
 
     // Make canvas droppable
     $("#canvas").droppable({
@@ -623,58 +653,58 @@ $(function () {
                 $(widget).css('position', 'absolute');
                 $(widget).css('top', ui.position.top - $(this).position().top - 13);
                 $(widget).css('left', ui.position.left - $(this).position().left - 13);
-				what=$(widget).find("#iphone");
-				if(what.hasClass("iphone")){
-				$(widget).css('width', 160);
-				$(widget).css('height', 300);
-				}
-			    else{	
-			
-				$(widget).css('width', 150);
-				$(widget).css('height', 65);
-			   }
+                what=$(widget).find("#iphone");
+                if(what.hasClass("iphone")){
+                    $(widget).css('width', 160);
+                    $(widget).css('height', 300);
+                }
+                else{	
+
+                    $(widget).css('width', 150);
+                    $(widget).css('height', 65);
+                }
 
                 $(widget).find('.text').dblclick(makeEditable);
                 $(widget).find('.edit-list').dblclick(makeListEditable);
-				if($(widget).hasClass('changefont')){
-                $(widget).contextmenu({'Bringtofront':func1,
-									   'Change-Font':func3},
-                                       'right');
-				}  
-				add=$(widget).find('#addown');
-				if(add.hasClass('crop')){
-		
-                $(widget).contextmenu({'Bringtofront':func1,
-									   'Crop':func3},
-                                       'right');
+                if($(widget).hasClass('changefont')){
+                    $(widget).contextmenu({'Bringtofront':func1,
+                        'Change-Font':func3},
+                        'right');
+                }  
+                add=$(widget).find('#addown');
+                if(add.hasClass('crop')){
+
+                    $(widget).contextmenu({'Bringtofront':func1,
+                        'Crop':func3},
+                        'right');
 
                 }				
-									 
+
                 $(widget).draggable({
 
-                    
-					start: function(event, ui) {
-                     //get all selected...
-                      if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
-                      else {
-                      selectedObjs = $(ui.helper);
-                      $('.selected').removeClass('selected')
-                           }
-                      },
+
+                    start: function(event, ui) {
+                        //get all selected...
+                        if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
+                        else {
+                            selectedObjs = $(ui.helper);
+                            $('.selected').removeClass('selected')
+                        }
+                    },
                     drag: function(event, ui) {
-                          var currentLoc = $(this).position();
-                          var prevLoc = $(this).data('prevLoc');
-                          if (!prevLoc) {
-                             prevLoc = ui.originalPosition;
-                             }
+                        var currentLoc = $(this).position();
+                        var prevLoc = $(this).data('prevLoc');
+                        if (!prevLoc) {
+                            prevLoc = ui.originalPosition;
+                        }
 
-                          var offsetLeft = currentLoc.left-prevLoc.left;
-                          var offsetTop = currentLoc.top-prevLoc.top;
+                        var offsetLeft = currentLoc.left-prevLoc.left;
+                        var offsetTop = currentLoc.top-prevLoc.top;
 
-                          moveSelected(offsetLeft, offsetTop);
-                         $(this).data('prevLoc', currentLoc);
-                			updateWidget(this);
-                       },
+                        moveSelected(offsetLeft, offsetTop);
+                        $(this).data('prevLoc', currentLoc);
+                        updateWidget(this);
+                    },
 
                     revert: function(event){
                         if (!event){
@@ -716,15 +746,15 @@ $(function () {
                         $('.selected').removeClass("selected");
                     });
                     event.stopPropagation();
-					if(!event.ctrlKey){
-                    $('.selected').removeClass("selected");
-                   }
-					
+                    if(!event.ctrlKey){
+                        $('.selected').removeClass("selected");
+                    }
+
                     $(this).addClass("selected");
                 });
                 //select and focusout ends
 
-               
+
 
                 // change text for new text label
                 $(widget).resizable({
@@ -738,25 +768,25 @@ $(function () {
                         updateWidget(this);
 
                     },
-                stop: function(event, ui){
-                    /*
-                    var textheight=parseFloat($(this).css('height'));
-                    var textwidth=parseFloat($(this).css('width'));
-                    var textmin=Math.max(textheight,textwidth);
-                    var ratio=textmin/100;                    //original wideget is 100px*100px
-                    spantext=$(this).find("span");
-                    if(!spantext.hasClass("text")){
+                    stop: function(event, ui){
+                        /*
+                           var textheight=parseFloat($(this).css('height'));
+                           var textwidth=parseFloat($(this).css('width'));
+                           var textmin=Math.max(textheight,textwidth);
+                           var ratio=textmin/100;                    //original wideget is 100px*100px
+                           spantext=$(this).find("span");
+                           if(!spantext.hasClass("text")){
 
-                        if(!ctrlpress){
-                            var k='font-size:'+(40*ratio)+'px';
+                           if(!ctrlpress){
+                           var k='font-size:'+(40*ratio)+'px';
 
-                            spantext[0].setAttribute("style",k);
-                        }
+                           spantext[0].setAttribute("style",k);
+                           }
+                           }
+                           ctrlpress=0;
+                           */
+                        updateWidget(this);
                     }
-                    ctrlpress=0;
-                    */
-                    updateWidget(this);
-                }
 
                 });
 
@@ -780,107 +810,107 @@ $(function () {
 ;(function($) {
     $.contextmenu='contextmenu';
     function removemenu(e){
-	var el = e.target;
-	if( $(el).parent('#'+$.contextmenu).size()==0) {
-	    $('#'+$.contextmenu).remove();
-	}
-	return false;
+        var el = e.target;
+        if( $(el).parent('#'+$.contextmenu).size()==0) {
+            $('#'+$.contextmenu).remove();
+        }
+        return false;
     }
     function firemenu(e,menu,el) {
-	removemenu(e);
-	$(el).data('clickphase',true);
-	setTimeout(function(){$(el).removeData('clickphase');},300);
-	var m = $('<ul id="'+$.contextmenu+'">');
-	$.each(menu, function(n,a) {
-	    if(typeof a == 'function') {
-		m.append($("<li>").html(n).hover(
-		    function(){
-			$(this).addClass("hover");
-		    },
-		    function(){
-			$(this).removeClass("hover");
-		    })
-			 .click(
-			     function(evt){
-				 $('#'+$.contextmenu).remove();
-				 $(el).data('served',true);
-				 a(evt,el);
-				 $(el).removeData('served');
-			     })
-			 .mouseup(
-			     function(evt){
-				 if($(el).data('clickphase')) return true;
-				 $('#'+$.contextmenu).remove();
-				 $(el).data('served',true);
-				 a(evt,el);
-				 $(el).removeData('served');
-			     })
-			);
-	    }
-	});
-	var pageX = e.pageX;
-	var pageY = e.pageY;
-	if(window.event) {
-	    pageX = $(window).scrollLeft()+e.clientX;
-	    pageY = $(window).scrollTop()+e.clientY;
-	}
-	m.css({'position':'absolute',top:pageY-3,left:pageX-3});
-	$("body").append(m);
-	document.getElementById($.contextmenu).oncontextmenu=function(){return false;};
-	$("body").one('click',removemenu);
-	$(document).one('mousedown',removemenu);
+        removemenu(e);
+        $(el).data('clickphase',true);
+        setTimeout(function(){$(el).removeData('clickphase');},300);
+        var m = $('<ul id="'+$.contextmenu+'">');
+        $.each(menu, function(n,a) {
+            if(typeof a == 'function') {
+                m.append($("<li>").html(n).hover(
+                        function(){
+                            $(this).addClass("hover");
+                        },
+                        function(){
+                            $(this).removeClass("hover");
+                        })
+                    .click(
+                        function(evt){
+                            $('#'+$.contextmenu).remove();
+                            $(el).data('served',true);
+                            a(evt,el);
+                            $(el).removeData('served');
+                        })
+                    .mouseup(
+                        function(evt){
+                            if($(el).data('clickphase')) return true;
+                            $('#'+$.contextmenu).remove();
+                            $(el).data('served',true);
+                            a(evt,el);
+                            $(el).removeData('served');
+                        })
+                    );
+            }
+        });
+        var pageX = e.pageX;
+        var pageY = e.pageY;
+        if(window.event) {
+            pageX = $(window).scrollLeft()+e.clientX;
+            pageY = $(window).scrollTop()+e.clientY;
+        }
+        m.css({'position':'absolute',top:pageY-3,left:pageX-3});
+        $("body").append(m);
+        document.getElementById($.contextmenu).oncontextmenu=function(){return false;};
+        $("body").one('click',removemenu);
+        $(document).one('mousedown',removemenu);
     }
     $.fn.contextmenu=function(menu,mode,timeout) {
-	var els = this;
-	$.each(els, function(i,el) {
-	    switch(mode) {
-	    case 'right':
-		el.oncontextmenu=function(e){if(e && !e.bubbles) {return true;} if(!e) e=window.event; if(!e.target) e.target = e.srcElement; firemenu(e,menu,el); if(window.event) window.event.cancelBubble = true; else e.stopPropagation();
-return false;};
-		break;
-	    case 'hold':
-		var timeoutfun = null;
-		$(el).mousedown(function(e){
-		    if(!e.bubbles) return;
-		    if(e.button == 2) return ;
-		    timeoutfun = setTimeout(function() {
-			$(el).data('menu',true);
-			firemenu(e,menu,el);
-			return false;
-		    },timeout);
-		}).mouseup(function(e){
-		    clearTimeout(timeoutfun);
-		    if($(el).data('menu')) {
-		    }
-		}).bind('dragstart',function(e){
-		    clearTimeout(timeoutfun);
-		    if($(el).data('menu')==true) return false;
-		    return true;
-		});
-		break;
-	    case 'hover':
-		var timeoutfun = null;
-		$(el).mouseover(function(e){
-		    if(!e.bubbles) return;
-		    if($('#'+$.contextmenu).size()>0) return ;
-		    if($(el).data('served')==true) return ;
-		    timeoutfun = setTimeout(function() {
-			$(el).data('menu',true);
-			firemenu($(el).data('e'),menu,el);
-		    },timeout);
-		    return false;
-		}).mousemove(function(e){
-		    $(el).data('e',e);
-		}).mouseout(function(e){
-		    clearTimeout(timeoutfun);
-		    $(el).removeData('e');
-		}).mousedown(function(e){
-		    clearTimeout(timeoutfun);
-		    $(el).removeData('e');
-		});
-		break;
-	    }
-	    return $(this);
-	});
+        var els = this;
+        $.each(els, function(i,el) {
+            switch(mode) {
+                case 'right':
+                    el.oncontextmenu=function(e){if(e && !e.bubbles) {return true;} if(!e) e=window.event; if(!e.target) e.target = e.srcElement; firemenu(e,menu,el); if(window.event) window.event.cancelBubble = true; else e.stopPropagation();
+                        return false;};
+                    break;
+                case 'hold':
+                    var timeoutfun = null;
+                    $(el).mousedown(function(e){
+                        if(!e.bubbles) return;
+                        if(e.button == 2) return ;
+                        timeoutfun = setTimeout(function() {
+                            $(el).data('menu',true);
+                            firemenu(e,menu,el);
+                            return false;
+                        },timeout);
+                    }).mouseup(function(e){
+                        clearTimeout(timeoutfun);
+                        if($(el).data('menu')) {
+                        }
+                    }).bind('dragstart',function(e){
+                        clearTimeout(timeoutfun);
+                        if($(el).data('menu')==true) return false;
+                        return true;
+                    });
+                    break;
+                case 'hover':
+                    var timeoutfun = null;
+                    $(el).mouseover(function(e){
+                        if(!e.bubbles) return;
+                        if($('#'+$.contextmenu).size()>0) return ;
+                        if($(el).data('served')==true) return ;
+                        timeoutfun = setTimeout(function() {
+                            $(el).data('menu',true);
+                            firemenu($(el).data('e'),menu,el);
+                        },timeout);
+                        return false;
+                    }).mousemove(function(e){
+                        $(el).data('e',e);
+                    }).mouseout(function(e){
+                        clearTimeout(timeoutfun);
+                        $(el).removeData('e');
+                    }).mousedown(function(e){
+                        clearTimeout(timeoutfun);
+                        $(el).removeData('e');
+                    });
+                    break;
+            }
+            return $(this);
+        });
     }
 })(jQuery);
