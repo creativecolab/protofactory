@@ -1,4 +1,13 @@
 var highest = 1;
+var lowest = 1;
+var textupdate = 1;
+var value=0;
+var recovercrop=0;
+var x1=0;
+var x2=0;
+var y1=0;
+var y2=0;
+var candelete=1;
 
 // DJANGO hack to be able to post with CSRF
 // using jQuery
@@ -38,10 +47,54 @@ function undoRedo(is_redo){
             is_redo: is_redo
         },
         success: function(data){
-            console.log(data);
-        },
+           console.log(data);
+		   var act=data['action'];
+		   var wid=data['widget'];
+		   console.log(act);
+		   if(act=="update"){
+		   var which=wid['pk'];
+		   var wtop=wid['top'];
+		   var wleft=wid['left'];
+		   var wheight=wid['height'];
+		   var wwidth=wid['width'];
+		   var wvalue=wid['value'];
+		   
+		   var selector = "div[widget-id*='" + which + "']" ;
+		   var updatew=$(selector)[0];
+		   console.log(updatew);
+		  
+		   var content=$(updatew).find('.widget-content')[0];
+		   console.log(content);
+		   $(content).replaceWith(wvalue);
+		   
+           $(updatew).css('top',wtop);
+           $(updatew).css('left',wleft);
+           $(updatew).css('height',wheight);
+		   $(updatew).css('width',wwidth);
+		   //content.attr('outerHTML',wvalue);
+        }
+		 
+		  if(act=="delete"){
+		    var which=wid['pk'];
+			var selector = "div[widget-id*='" + which + "']" ;
+		    var delatew=$(selector)[0];
+		    deleteWidget(delatew);
+		  }
+		  
+		  if(act=='create'){
+		    var which=wid['pk'];
+			var selector = "div[widget-id*='" + which + "']" ;
+            var createw=$(selector)[0];   
+			
+			$(createw).css('visibility','visible');	
+		    
+		  
+		  }
+    }
     });
+	
 }
+
 
 function undo(){
     undoRedo("False");
@@ -88,6 +141,7 @@ function createWidget(widget){
 }
 
 function updateWidget(widget){
+    if(textupdate==1){
     var prefix = get_site_prefix();
     $.ajax({
         type: "POST",
@@ -105,6 +159,7 @@ function updateWidget(widget){
         },
     });
 }
+}
 
 function deleteWidget(widget){
     var prefix = get_site_prefix();
@@ -116,36 +171,42 @@ function deleteWidget(widget){
             console.log(data);
         },
     });
-    $(widget).remove();
+    $(widget).css('visibility','hidden');
 }
 
 function makeEditable(event){
+    textupdate=0;
     editableText = $("<textarea />");
+	$(editableText).attr('wrap','hard');
     $(editableText).css("width","100%");
     $(editableText).css("height","100%");
-    editableText.val($(this).text());
-
+	editableText.val($(this).text());
     $(this).replaceWith(editableText);
+	candelete=0;
     $(editableText).focus();
     $(editableText).change(function(){
         $(this).blur();
     });
     $(editableText).focusout(function(event, ui){
         var uneditableText = $("<div/>");
-        uneditableText.addClass("text");
+        uneditableText.addClass("text-oneline");
+		uneditableText.addClass("fontsize");
         uneditableText.text($(this).val());
         $(this).replaceWith(uneditableText);
-
+        candelete=1;
         widget = $(uneditableText).parent();
         while (!widget.attr('widget-id')){
             widget = widget.parent();
         }
         $(uneditableText).dblclick(makeEditable);
+		textupdate=1;
         updateWidget(widget);
+		
     });
 }
 
 function makeListEditable(event){
+    textupdate=0;
     editableText = $("<textarea />");
     $(editableText).css("width","100%");
     $(editableText).css("height","100%");
@@ -163,6 +224,7 @@ function makeListEditable(event){
     editableText.val(text);
 
     $(this).replaceWith(editableText);
+	candelete=0;
     $(editableText).focus();
     $(editableText).change(function(){
         $(this).blur();
@@ -170,6 +232,8 @@ function makeListEditable(event){
     $(editableText).focusout(function(event, ui){
         var uneditableText = $("<ul/>");
         uneditableText.addClass("edit-list");
+		uneditableText.addClass("fontsize");
+		//uneditableText.attr('style',"list-style: none;");
         var lines = $(this).val().split('\n');
         for (var i = 0; i < lines.length; i++){
             var element = $("<li/>");
@@ -177,19 +241,58 @@ function makeListEditable(event){
             uneditableText.append(element);
         }
         $(this).replaceWith(uneditableText);
+		candelete=1;
         widget = $(uneditableText).parent();
         while (!widget.attr('widget-id')){
             widget = widget.parent();
         }
         $(uneditableText).dblclick(makeListEditable);
+		textupdate=1;
         updateWidget(widget);
     });
 }
 
 
+function makeTextEditable(event){
+    textupdate=0;
+    editableText = $("<textarea />");
+	$(editableText).attr('wrap','hard');
+    $(editableText).css("width","100%");
+    $(editableText).css("height","100%");
+	editableText.val($(this).text());
+    $(this).replaceWith(editableText);
+	candelete=0;
+    $(editableText).focus();
+    $(editableText).change(function(){
+        $(this).blur();
+    });
+    $(editableText).focusout(function(event, ui){
+        var uneditableText = $("<div/>");
+        uneditableText.addClass("text-newline");
+		uneditableText.addClass("fontsize");
+        uneditableText.text($(this).val());
+        $(this).replaceWith(uneditableText);
+        candelete=1;
+        widget = $(uneditableText).parent();
+        while (!widget.attr('widget-id')){
+            widget = widget.parent();
+        }
+        $(uneditableText).dblclick(makeTextEditable);
+		textupdate=1;
+        updateWidget(widget);
+		
+    });
+}
+
 
 function setDepthFront(widget){
     $(widget).bringToTop();
+    $(widget).find('.widget-content').attr("depth", $(widget).css('z-index'));
+
+}
+
+function setDepthBottom(widget){
+    $(widget).bringToBottom();
     $(widget).find('.widget-content').attr("depth", $(widget).css('z-index'));
 
 }
@@ -215,6 +318,10 @@ function bringtofront(event,ui){
     setDepthFront($(this));
 }
 
+function bringtoBottom(event,ui){
+    setDepthBottom($(this));
+}
+
 function changeImage(event,ui)
 {
     var images=new Array(' http://pb-i4.s3.amazonaws.com/photos/365451-1405284777-3.jpg ',' http://pb-i4.s3.amazonaws.com/photos/365451-1405284877-1.jpg ');
@@ -225,61 +332,144 @@ function changeImage(event,ui)
     }
 }
 
+
+
 function func1(e,e1){
 
     setDepthFront($(e1));
     updateWidget($(e1));
 }
 
-/*function func2(e,e2){
+function func8(e,e8){
+    setDepthBottom($(e8));
+    updateWidget($(e8));
+
+}
+
+function func4(e,e4){
+    $('#picker').css('opacity',1);
+	$('.now').removeClass('now');
+    $(e4).addClass('now');
+	$('#picker').colpick({
+	onSubmit:function(hsb,hex,rgb,el) {
+		var ss=$('.now').find('.backcolor')[0];
+		$(ss).attr('style','background-color:#'+hex);
+		updateWidget($('.now'));
+		//$('.now').removeClass('now');
+		
+	}
+})
+}
+
+
+
+function func2(event,e2){
   var a=0;
+  
+  $(e2).addClass('ongoingcrop');
   $(e2).imgAreaSelect({
+  enable:true,
   handles: true,
   onSelectEnd: function (img, selection) {
-  $('.imgareaselect-selection').css("opacity","0");
-  $('.imgareaselect-outer').css("opacity",'1');
+            recovercrop=0;
+			
+             x1=selection.x1;
+             x2=selection.x2;
+             y1=selection.y1;
+             y2=selection.y2;
+            console.log(x1,x2,y1,y2);
+			 
+	
+ }
+ 
+ });
+ $(document).keydown( function(event,e2) {
+             if (event.keyCode == 13 ||event.which==13) {
+			 var image=$(this).find('.ongoingcrop')[0];
+			  var k='position:absolute; clip:rect('+y1+'px,'+x2+'px,'+y2+'px,'+x1+'px)';
 
-  }   
-  }); 
-  $(e2).draggable( "disable" );
-
-  var e = window.event || e;
-  var code = e.which || e.keyCode;
-  if(code == 13) {
-  alert('ddd');
-  var back=$(e2).find("#addown");
-  back[0].setAttribute("style","width:40px;height:50px;margin-Left:-10px;margin-Right:-10px;");
-  }
-
-  }
-  */
+             console.log(k);
+			$(image).attr("style",k);
+			
+			
+			var par=$(image).parent();
+            updateWidget(par);		
+           $(image).imgAreaSelect({
+			
+			remove:true});
+			
+			
+            $(image).removeClass('ongoingcrop');
+            }
+		
+		});
+} 
 
 function func3(e,e3){
-    var textchange=$(e3).find(".text");
-    var fontsize = prompt('input the font-size (px) :', '15');
-
+    var textchange=$(e3).find(".text-newline");
+	
+	var textchange2=$(e3).find('.text-oneline');
+	var textlistchange=$(e3).find('.edit-list');
+	console.log($(e3).find('.fontsize').css('font-size'));
+    var fontsize = prompt('input the font-size (px) :',parseInt($(e3).find('.fontsize').css("font-size")));
+    
     if (fontsize) {
         console.log("Your fontsize is: " +  fontsize);
         textchange.attr("style","font-size:"+fontsize+'px');
+		textchange2.attr('style','font-size:'+fontsize+'px');
+		textlistchange.attr("style","font-size:"+fontsize+'px');
     }
     else {console.log("You pressed Cancel or no value was entered!");
     }
     updateWidget($(e3));
 }
 
+function func5(e,e5){
+   var value=parseInt($(e5).attr('rotate'));
+   value=value+parseInt(45);
+   if(value>360){
+   value=value-parseInt(360);
+   }
+   console.log(value);
+   $(e5).rotate({ animateTo:value});
+   pa=$(e5).parent();
+   $(e5).attr("rotate", value);
+   updateWidget(pa);
+       
+}
+
+function func6(e,e6){
+   var value=parseInt($(e6).attr('rotate'));
+   value=value-parseInt(45);
+   
+   $(e6).rotate({ animateTo:value});
+   pa=$(e6).parent();
+   $(e6).attr("rotate", value);
+   updateWidget(pa);
+   
+}
 
 function checkdelete(e,ui)
 {
     var e = window.event || e;
     var code = e.which || e.keyCode;
     deletewidget=$(".selected");
+	if(code == 13){
+	recovercrop=1;
+	
+	}
+	
+			
+		
     if(code == 46)
     {
 
         var number=$(".selected").size();
+		if(candelete==1){
         for(var i=0;i<number;i++){
             deleteWidget(deletewidget[i]);
         }
+	   }
     }
 }
 
@@ -328,8 +518,9 @@ $(function () {
     //end define arrows
 
 
+   
 
-
+    //$('#picker').colpick();
 
     //descriptions
     $("#addmyown").mouseover(function(){
@@ -345,6 +536,49 @@ $(function () {
     }).mouseout(function() {
         $("#iphonex").hide();
     });
+	
+	$("#list-w").mouseover(function(){
+
+        $("#listx").show();
+    }).mouseout(function() {
+        $("#listx").hide();
+    });
+	
+	$("#droplist-w").mouseover(function(){
+
+        $("#droplistx").show();
+    }).mouseout(function() {
+        $("#droplistx").hide();
+    });
+	
+	$("#button-w").mouseover(function(){
+
+        $("#buttonx").show();
+    }).mouseout(function() {
+        $("#buttonx").hide();
+    });
+	
+	$("#inputbox-w").mouseover(function(){
+
+        $("#inputboxx").show();
+    }).mouseout(function() {
+        $("#inputboxx").hide();
+    });
+	
+	$("#arrow-w").mouseover(function(){
+
+        $("#arrowx").show();
+    }).mouseout(function() {
+        $("#arrowx").hide();
+    });
+	
+	$("#textlabel-w").mouseover(function(){
+
+        $("#textlabelx").show();
+    }).mouseout(function() {
+        $("#textlabelx").hide();
+    });
+	
     //
 
     $.ajaxSetup({
@@ -362,10 +596,13 @@ $(function () {
         this.css('z-index', ++highest); // increase highest by 1 and set the style
     };
 
-
+     $.fn.bringToBottom = function() {
+        this.css('z-index', --lowest); // increase highest by 1 and set the style
+    };
 
     //Handle existing widgets
-    $('.existing-widget').find('.text').dblclick(makeEditable);
+    $('.existing-widget').find('.text-oneline').dblclick(makeEditable);
+	$('.existing-widget').find('.text-newline').dblclick(makeTextEditable);
     $('.existing-widget').find('.edit-list').dblclick(makeListEditable);
     $('.existing-widget #arrow').dblclick(function(event,ui){
         $(this).attr("src",images[x]);
@@ -387,6 +624,11 @@ $(function () {
         }
     }
 
+	for (var i = 0; i < widgets.length; i++){
+        if ($(widgets[i]).css('z-index') && parseInt($(widgets[i]).css('z-index')) < lowest){
+            lowest = parseInt($(widgets[i]).css('z-index'));
+        }
+    }
     //contextmenu
     /*
        changef=$('.existing-widget').find('.text');
@@ -405,13 +647,103 @@ $(function () {
        'right');
        }
        */
+	   
+    //ctrl+z and ctrl+x undo-redo
+	
+	 $(window).bind('keydown', function(event) {
+      if (event.ctrlKey || event.metaKey) {
+        switch (String.fromCharCode(event.which).toLowerCase()) {
+        case 'z':
+            event.preventDefault();
+            undo();
+            break;
+        case 'x':
+            event.preventDefault();
+            redo();
+            break;
+     
+        }
+      }
+	  	if(event.altKey){
+		    event.preventDefault();
+            $('#canvas').imgAreaSelect({
+           
+            handles: true,
+            onSelectEnd: function (img, selection) {
+            recovercrop=0;
+			
+             x1=selection.x1;
+             x2=selection.x2;
+             y1=selection.y1;
+             y2=selection.y2;
+            console.log(x1,x2,y1,y2);
+			 allwidget=$('#canvas').find('.draggable-widget');
+			 console.log(allwidget);
+			 for(var i=0;i<allwidget.length;i++){
+			    var left=parseInt(allwidget[i].style.left);
+				var top=parseInt(allwidget[i].style.top);
+				var height=parseInt(allwidget[i].style.height);
+				var width=parseInt(allwidget[i].style.width);
+				if( left>x1&&top>y1&&(left+width)<x2&&(top+height)<y2){
+				  $(allwidget[i]).addClass("selected");
+				
+				}
+			 
+			 
+			 
+			 }
+			
+			
+			$('#canvas').imgAreaSelect({
+              remove:true,
+              handles:false});
+	
+               }
+          });
+			
+	   }
+    });
+    
 
+	
+	crop=$('.existing-widget').find('.crop');
+	for(var i=0;i<crop.length;i++){
+	  $(crop[i]).contextmenu({ 
+					  'crop':func2},
+					  'right');
+	}
 
-
-
-
-
+    changefont=$('.existing-widget').find('.changefont');
+	for(var i=0;i<changefont.length;i++){
+    if($(changefont[i]).hasClass('changefont')){
+    $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
+	                    'bringtoBottom':func8,
+                        'Change-Font':func3,
+						'Background-Color':func4},
+                        'right');
+     }  
+    }
+    
+	iphone=$('.existing-widget').find('.iphone');
+	for(var i=0;i<iphone.length;i++){
+    if($(iphone[i]).hasClass('iphone')){
+    $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
+	                    'bringtoBottom':func8
+                        },
+                        'right');
+     }  
+    }
+	
     //rotate
+	arrowcont=$('.existing-widget').find('.arrow');
+				for(var i=0;i<arrowcont.length;i++){
+				  $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
+                        'Counterclockwise':func6},
+                        'right');
+				}
+	
+	
+	
     $('.existing-widget').draggable({
         start: function(event, ui) {
             //get all selected...
@@ -443,13 +775,12 @@ $(function () {
         return false;
     },
     stop: function(event,ui){
-        //$.each(selectedObjs, function(w){
-        //    updateWidget(w);
-        //});
-        updateWidget(this);
+       for(var k=0;k<selectedObjs.length;k++){
+		updateWidget(selectedObjs[k]);
+       }
     }
     });
-
+    
 
 
     $('.existing-widget').resizable({
@@ -492,6 +823,8 @@ $(function () {
     $('#canvas').click(function(event){
         $('.selected').removeClass("selected");
     });
+
+  
 
 
     $(".existing-widget").click(function(event){
@@ -536,6 +869,46 @@ $(function () {
                 $(widgetnew).removeClass('ui-draggable');
                 $(widgetnew).removeClass('ui-resizable');
                 $(widgetnew).find('.ui-resizable-handle').remove();
+				
+				
+				//contextmenu
+				changefont=$(widgetnew).find('.changefont')
+				for (var i=0;i<changefont.length;i++){
+                
+                    $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
+					    'BringtoBottom':func8,
+                        'Change-Font':func3,
+						'Background-Color':func4,},
+                        'right');
+                }  
+                
+				iphone=$(widgetnew).find('.iphone')
+				for (var i=0;i<iphone.length;i++){
+                
+                    $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
+					    'BringtoBottom':func8},
+                        'right');
+                }  
+				
+                //arrow contextmenu
+				arrowcont=$(widgetnew).find('.widget-content');
+				for(var i=0;i<arrowcont.length;i++){
+				if($(arrowcont[i]).hasClass('arrow')){
+				  $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
+                        'Counterclockwise':func6},
+                        'right');
+			    }
+				}
+				
+				crop=$(widgetnew).find('.crop');
+			      for(var i=0;i<crop.length;i++){
+				 $(crop[i]).contextmenu({ 
+					                    
+				                        'crop':func2},
+					                      'right');
+				}
+				
+				// contextmenu ends
                 console.log($(widgetnew));
 
                 if(!left[i]){
@@ -552,11 +925,10 @@ $(function () {
 
                 console.log($(widgetnew));
 
-                $(widgetnew).find('.text').dblclick(makeEditable);
+                $(widgetnew).find('.text-oneline').dblclick(makeEditable);
+				 $(widgetnew).find('.text-newline').dblclick(makeTextEditable);
                 $(widgetnew).find('.edit-list').dblclick(makeListEditable);
-                $(widgetnew).contextmenu({'bring to front':func1,
-                },
-                'right');
+               
                 $(widgetnew).draggable({
                     start: function(event, ui) {
                         //get all selected...
@@ -578,14 +950,21 @@ $(function () {
 
                         moveSelected(offsetLeft, offsetTop);
                         $(this).data('prevLoc', currentLoc);
-                        updateWidget(this);
+                        //updateWidget(this);
                     },
                     revert: function(event){
                         if (!event){
                             deleteWidget(this);
                         }
                         return false;
-                    }
+                    },
+					stop: function(event){
+					   for(var k=0;k<selectedObjs.length;k++){
+		                 updateWidget(selectedObjs[k]);
+                       }
+					    
+					}
+					
                 });
 
                 $(widgetnew).resizable({
@@ -654,32 +1033,79 @@ $(function () {
                 $(widget).css('top', ui.position.top - $(this).position().top - 13);
                 $(widget).css('left', ui.position.left - $(this).position().left - 13);
                 what=$(widget).find("#iphone");
+				whatarrow=$(widget).find('.widget-content');
                 if(what.hasClass("iphone")){
                     $(widget).css('width', 160);
                     $(widget).css('height', 300);
                 }
+				else if(whatarrow.hasClass('arrow'))
+				{
+				    $(widget).css('width',150);
+					$(widget).css('height',150);
+				    $(widget).find('.widget-content').attr('rotate',0);
+				}
+				
+				else if(whatarrow.hasClass('check'))
+				{
+				    $(widget).css('width',70);
+					$(widget).css('height',80);
+				   
+				}
                 else{	
 
                     $(widget).css('width', 150);
                     $(widget).css('height', 65);
                 }
 
-                $(widget).find('.text').dblclick(makeEditable);
+                $(widget).find('.text-oneline').dblclick(makeEditable);
+				$(widget).find('.text-newline').dblclick(makeTextEditable);
                 $(widget).find('.edit-list').dblclick(makeListEditable);
-                if($(widget).hasClass('changefont')){
-                    $(widget).contextmenu({'Bringtofront':func1,
-                        'Change-Font':func3},
+				
+				//contextmenu
+				changefont=$(widget).find('.changefont')
+				for (var i=0;i<changefont.length;i++){
+                
+                    $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
+					    'BringtoBottom':func8,
+                        'Change-Font':func3,
+						'Background-Color':func4,},
                         'right');
                 }  
-                add=$(widget).find('#addown');
-                if(add.hasClass('crop')){
-
-                    $(widget).contextmenu({'Bringtofront':func1,
-                        'Crop':func3},
+                
+				iphone=$(widget).find('.iphone')
+				for (var i=0;i<iphone.length;i++){
+                
+                    $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
+					    'BringtoBottom':func8},
                         'right');
+                }  
+				
+				
+				
+				
+				
+                //arrow contextmenu
+				arrowcont=$(widget).find('.widget-content');
+				for(var i=0;i<arrowcont.length;i++){
+				if($(arrowcont[i]).hasClass('arrow')){
+				  $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
+                        'Counterclockwise':func6},
+                        'right');
+			    }
+				}
+				
+				crop=$(widget).find('.crop');
+			      for(var i=0;i<crop.length;i++){
 
-                }				
-
+			
+				 $(crop[i]).contextmenu({ 
+					                    
+				                        'crop':func2},
+					                      'right');
+				}
+				
+				// contextmenu ends
+				
                 $(widget).draggable({
 
 
@@ -703,7 +1129,8 @@ $(function () {
 
                         moveSelected(offsetLeft, offsetTop);
                         $(this).data('prevLoc', currentLoc);
-                        updateWidget(this);
+                       // updateWidget(this);
+					    
                     },
 
                     revert: function(event){
@@ -711,6 +1138,11 @@ $(function () {
                             deleteWidget(this);
                         }
                         return false;
+                    },
+					stop: function(event,ui){
+					    for(var k=0;k<selectedObjs.length;k++){
+					       updateWidget(selectedObjs[k]);
+					   }
                     }
                 });
                 $(widget).dblclick(bringtofront);
