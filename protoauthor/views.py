@@ -14,6 +14,12 @@ def index(request):
     context = {'interfaces': interfaces}
     return render(request, 'protoauthor/index.html', context)
 
+def newDesign(request):
+    name = "AutoGen"
+    interface = Interface(name=name)
+    interface.save()
+    return redirect('protoauthor.views.updateInterface', interface.id)
+
 def createInterface(request):
     if request.method == 'POST' and request.POST['name'] != "":
         interface = Interface(name=request.POST['name'])
