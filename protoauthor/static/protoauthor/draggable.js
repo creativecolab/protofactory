@@ -172,7 +172,7 @@ function deleteWidget(widget){
         },
     });
     $(widget).css('visibility','hidden');
-}
+} 
 
 function makeEditable(event){
     textupdate=0;
@@ -410,7 +410,7 @@ function func3(e,e3){
 	
 	var textchange2=$(e3).find('.text-oneline');
 	var textlistchange=$(e3).find('.edit-list');
-	console.log($(e3).find('.fontsize').css('font-size'));
+	//console.log($(e3).find('.fontsize').css('font-size'));
     var fontsize = prompt('input the font-size (px) :',parseInt($(e3).find('.fontsize').css("font-size")));
     
     if (fontsize) {
