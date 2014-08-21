@@ -13,12 +13,14 @@
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
 
-<div id="nav" style="background-color:#93db86; height:50px;">
+<div id="nav" style="background-color:#93db86; height:60px;">
     <!-- <a href="" style="color:#373737">Back</a> -->
-	<span style="position:relative; left:35%;
-        margin:auto;font-size:38px;font-family:Verdana;color:white"> Prototype
+	<span style="position:relative; left:25%;
+        margin:auto;font-size:42px;font-family:Verdana;"> Prototype
         Factory </span> 
-    <em style="font-size:30px; float: right;">Your TURK ID is: {{ interface.id }} </em>
+	<span class='time' style="font-size:30px; position:relative; left:33%; "></span>
+    <span class='tid' style="font-size:30px; float: right; color:white;">Your TURK ID is: {{ interface.id }} </span>
+	<img class='submit' style="float:left; width:180px; height:59px" src="http://gentleninja.com/wp-content/uploads/2012/07/submit.png"> </img>
 	
 	<br/>
 	<br/>
@@ -120,7 +122,7 @@
 	
     <div class="draggable-widget" id="addmyown">
        <div class="widget-content crop">
-            <img class="widget" id="addown" src="http://i.imgur.com/aMOPVwK.png" >
+            <img class="widget" id="addown" src="http://images.wikia.com/clubpenguin/images/6/6c/Add_image_icon.svg" >
       </div>
     </div>	
     
@@ -132,74 +134,34 @@
 	<div class="description" id="inputboxx"> This is a inputbox. Double-click to edit </div>
 	<div class="description" id="arrowx"> This is a arrow. Right-click to change to direction </div>
 	<div class="description" id="textlabelx"> This is a textlabel. Double-click to edit </div>
-	<button id="picker"></button>
-    <!-- NOT CONFIGURED CORRECTLY -->
+	<div class="description" id="colorindex" style="font-size:20px; width:240px;"> Click the Box >>>>> </div>
+	
+   <div id="dialog" class='dia' title="Operating Director" style="background-color:white" > <p style="font-size:18px;" >1. Drag and Drop: Please drag the element from the items'bar to the canvas.If you want to 
+   delete the items, make sure you have selected it (with red edges), then press 'delete' on the keyboard !</p>
+   <p>   2. Bring to front/bottom: Right click the item on the canvas, you will see a 
+   button called 'bring to front/bottom' </p>
+   <p>  3. Copy and Paste: make sure you have select(with red edges) the element and press ctrl+c and ctrl+v. </p>
+   <p>  4. Mutiple-select: Two ways: a. Press ALT on the keyboard first, then drag and cover the element you want to select. b. Click and press CTRL at the same time to select more than one element. </p>
+   <p>      Also, mutiple items can be drag at the same time! </p>
+   <p>  5. Change Color: right click the item if you see "change the background". Then click the color box on the above to choose your color, then press 'ok'</p>
+   <p>  6. Change Font: right click if you see "change the font". Put the font-size like '20' in the input box. You needn't add unit!</p>
+   <p>  7. Add your own picture: Drag the "add your own" widget on the canvas and double click. You need to google your own picture's URL and paste it in the box. </P>
+   <p>  8. Rotate the arrow: Right-click the arrow and let it rorate.</p>
+   <p>  9. Resize: Drag the right-bottom corner the item (Sorry we just have one angle to resize). Press SHIFT to fix aspect ratio </p>
+   <p> 10. Edit the text: Double-click the text on the item and type. When you finish, please out-focus the textbox. </p>
+   <p> 11. Crop: Just used for "add your own" widget. Right-click and click 'crop'. After you select the image, press ENTER </p>
+   <p> 12. List item: Everytime you enter a new-line, a dot will be automatically added to a new line </p>
+   
+   
+   </div>
+   
+	<div id='help'></div>
 
-    <!--
-    <div class="draggable-widget" >
-        <div class="widget" style=" width:100%; height:100%; background-image:url('http://i.imgur.com/CJfQxn0.png');background-repeat:no-repeat;background-size:100% 100%;">
-            <div class="widget" style="width:66%; position:relative; left:20%;">
-                <span class="text"  style="font-size:30px;">List</span>
-            </div>
-        </div>
-    </div>
 
-    <div class="draggable-widget" >
-        <div class="widget" style=" width:100%; height:100%; background-image:url('http://i.imgur.com/Q4Hekl6.png');background-repeat:no-repeat;background-size:100% 100%;">
-            <div class="widget" style="width:66%; position:relative; left:20%;">
-                <span class="text"  style="font-size:30px;">List</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="draggable-widget" >
-        <div class="widget" style=" width:100%; height:100%; background-image:url('http://i.imgur.com/iUfQb8o.png');background-repeat:no-repeat;background-size:100% 100%;">
-            <div class="widget" style="width:66%; position:relative; left:30%;">
-                <span class="text"  style="font-size:30px;">Check</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="draggable-widget" >
-        <div class="widget" style=" width:100%; height:100%; background-image:url('http://i.imgur.com/S2kDQ6d.png');background-repeat:no-repeat;background-size:100% 100%;">
-            <div class="widget" style="width:66%; position:relative; left:30%;">
-                <span class="text"  style="font-size:30px;">Check</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405909782-1.jpg"></div>	
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405879878-0.jpg"></div>	
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405879878-3.jpg"></div>	
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-2.jpg"></div>		
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405910012-0.jpg"></div>		
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405910012-1.jpg"></div>
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405910012-3.jpg"></div>
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405910012-4.jpg"></div>
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405909782-3.jpg"></div>
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405909782-4.jpg"></div>
-    <div class="draggable-widget"><img class="widget" id="picture"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405880918-3.jpg"></div>	
-    <div class="draggable-widget" id="addmyown"><img class="widget" id="addown"
-        src="http://pb-i4.s3.amazonaws.com/photos/365451-1405864976-0.jpg"></div>	
-
-    -->
 </div>	
+<div id="picker"></div>
 
-<div id="trash">
-</div>
 
-<div id="dialog" title="User define"></div>
 
 <div class="clear"></div>
 

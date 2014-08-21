@@ -8,6 +8,8 @@ var x2=0;
 var y1=0;
 var y2=0;
 var candelete=1;
+var timeoutId = 0;
+var timer=0;
 
 // DJANGO hack to be able to post with CSRF
 // using jQuery
@@ -348,15 +350,29 @@ function func8(e,e8){
 
 function func4(e,e4){
     $('#picker').css('opacity',1);
+	$('#colorindex').show();
 	$('.now').removeClass('now');
     $(e4).addClass('now');
+	var colornow=$('.now').find('.backcolor')[0];
+	//alert($(colornow).css('background-color'));
+	$('#picker').css('background-color', $(colornow).css('background-color'));
 	$('#picker').colpick({
-	onSubmit:function(hsb,hex,rgb,el) {
+	
+    
+	onChange:function(hsb,hex,rgb,el) {
 		var ss=$('.now').find('.backcolor')[0];
 		$(ss).attr('style','background-color:#'+hex);
+		
 		updateWidget($('.now'));
 		//$('.now').removeClass('now');
 		
+	},
+	onSubmit:function(hsb,hex,rgb,el) {
+		$('#picker').css('background-color','#'+hex);
+		updateWidget($('.now'));
+		
+		$('#picker').colpickHide();
+		$('#colorindex').hide();
 	}
 })
 }
@@ -461,7 +477,7 @@ function checkdelete(e,ui)
 	
 			
 		
-    if(code == 46)
+    if(code == 46 ||code == 8)
     {
 
         var number=$(".selected").size();
@@ -505,20 +521,54 @@ $(function () {
     for (var i = 0; i < 20; i++) top[i] = 0;
     var selectone;
     //var addmy=$(".existing-widget").find("#addown");
-    //define the arrow picture
-    var images=new Array();
-    images[0] = "http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-0.jpg";
-    images[1] = "http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-1.jpg";
-    images[2]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-2.jpg";
-    images[3]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-3.jpg";
-    images[4]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690846-4.jpg";
-    images[5]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690882-0.jpg";
-    images[6]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690882-1.jpg";
-    images[7]=  "http://pb-i4.s3.amazonaws.com/photos/365451-1405690882-2.jpg";
-    //end define arrows
+    
+	window.onload = function() {
+    timeoutId = setInterval(function(){timer++;},1000);
+}
+	$('.submit').click(function(){
+	   
+	   var id=$('.tid').text();
+	   console.log(id);
+	   var r = confirm("Submit Your Work ? ");
+       if (r == true) {
+	    window.clearInterval(timeoutId);
+        alert(id+ '\n *************************\n------------------------------------\n Your TIME is :'+timer + 's\n ****************************\n-----------------------------\n' + '!!Please remember your TURKEY ID and put it in the Turkey response!!');
+	   $('.time').text('Time:'+timer+'s');
+       } 
+	   
+	   
+	});
+	
+       var rx = /INPUT|SELECT|TEXTAREA/i;
 
-
+    $(document).bind("keydown keypress", function(e){
+        if( e.which == 8 ){ // 8 == backspace
+            if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
+                e.preventDefault();
+            }
+        }
+    });
    
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+	  width:1000,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+    });
+	
+	
+    $('#help').click(function(){
+	//alert('Operating Guidance\n 1.Drag and Drop: Drag the element from the item bar to the canvas. Select the element(with red edges means selected ) and click delete on your keyboard');
+    $( "#dialog" ).dialog('open');
+	
+	});
+
 
     //$('#picker').colpick();
 
@@ -1014,15 +1064,15 @@ $(function () {
         }
     });
 
-
-
+	
 
 
     // Make canvas droppable
     $("#canvas").droppable({
         drop: function(event, ui) {
-            if (!$(ui.draggable).hasClass('existing-widget')){
+            if (!($(ui.draggable).hasClass('existing-widget') || $(ui.draggable).hasClass('ui-dialog'))){
                 widget = $(ui.draggable).clone();
+				
                 $(this).append(widget);
                 $('#canvas .draggable-widget').addClass('existing-widget');
                 //		myown=$(widget).find("#addown");
