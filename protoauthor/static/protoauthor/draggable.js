@@ -1,5 +1,5 @@
-var highest = 1;
-var lowest = 1;
+var highest = 10;
+var lowest = 10;
 var textupdate = 1;
 var value=0;
 var recovercrop=0;
@@ -521,9 +521,33 @@ $(function () {
     for (var i = 0; i < 20; i++) top[i] = 0;
     var selectone;
     //var addmy=$(".existing-widget").find("#addown");
-    
+   
+   
 	window.onload = function() {
     timeoutId = setInterval(function(){timer++;},1000);
+	//navigator
+    var Sys = {};
+        var ua = navigator.userAgent.toLowerCase();
+        if (window.ActiveXObject)
+            Sys.ie = ua.match(/msie ([\d.]+)/)[1]
+        else if (document.getBoxObjectFor)
+            Sys.firefox = ua.match(/firefox\/([\d.]+)/)[1]
+        else if (window.MessageEvent && !document.getBoxObjectFor)
+            Sys.chrome = ua.match(/chrome\/([\d.]+)/)[1]
+        else if (window.opera)
+            Sys.opera = ua.match(/opera.([\d.]+)/)[1]
+        else if (window.openDatabase)
+            Sys.safari = ua.match(/version\/([\d.]+)/)[1];
+        
+        //以下进行测试
+        if(Sys.ie) alert('IE: '+Sys.ie+'Some of the features can not be supported ! Please change your explorer to Chrome !');
+        if(Sys.firefox) alert('Firefox: '+Sys.firefox+'\n Some of the features can not be supported ! Please change your explorer to Chrome !');
+        //if(Sys.chrome) document.write('Chrome: '+Sys.chrome);
+        if(Sys.opera) alert('Opera: '+Sys.opera + 'Some of the features can not be supported ! Please change your explorer to Chrome !');
+        if(Sys.safari) alert('Safari: '+Sys.safari + 'Some of the features can not be supported ! Please change your explorer to Chrome !');
+   
+   
+   //
 }
 	$('.submit').click(function(){
 	   
