@@ -489,19 +489,20 @@ function checkdelete(e,ui)
     }
 }
 
-/*function checkenter(e,ui)
-  {
-  var e = window.event || e;
-  var code = e.which || e.keyCode;
-  if(code == 13)
-  {
-  var number=$(".selected").size();
-  for(var i=0;i<number;i++){
-  deleteWidget(deletewidget[i]);
-  }
-  }
-  }
-  */
+function get_browser(){
+    var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []; 
+    if(/trident/i.test(M[1])){
+        tem=/\brv[ :]+(\d+)/g.exec(ua) || []; 
+        return 'IE '+(tem[1]||'');
+        }   
+    if(M[1]==='Chrome'){
+        tem=ua.match(/\bOPR\/(\d+)/)
+        if(tem!=null)   {return 'Opera '+tem[1];}
+        }   
+    M=M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+    if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+    return M[0];
+    }
 
 $(function () {
 
@@ -521,34 +522,11 @@ $(function () {
     for (var i = 0; i < 20; i++) top[i] = 0;
     var selectone;
     //var addmy=$(".existing-widget").find("#addown");
+    var browser=get_browser();
+    console.log(browser);
    
-   
-	window.onload = function() {
-    timeoutId = setInterval(function(){timer++;},1000);
-	//navigator
-    var Sys = {};
-        var ua = navigator.userAgent.toLowerCase();
-        if (window.ActiveXObject)
-            Sys.ie = ua.match(/msie ([\d.]+)/)[1]
-        else if (document.getBoxObjectFor)
-            Sys.firefox = ua.match(/firefox\/([\d.]+)/)[1]
-        else if (window.MessageEvent && !document.getBoxObjectFor)
-            Sys.chrome = ua.match(/chrome\/([\d.]+)/)[1]
-        else if (window.opera)
-            Sys.opera = ua.match(/opera.([\d.]+)/)[1]
-        else if (window.openDatabase)
-            Sys.safari = ua.match(/version\/([\d.]+)/)[1];
-        
-        //以下进行测试
-        if(Sys.ie) alert('IE: '+Sys.ie+'Some of the features can not be supported ! Please change your explorer to Chrome !');
-        if(Sys.firefox) alert('Firefox: '+Sys.firefox+'\n Some of the features can not be supported ! Please change your explorer to Chrome !');
-        //if(Sys.chrome) document.write('Chrome: '+Sys.chrome);
-        if(Sys.opera) alert('Opera: '+Sys.opera + 'Some of the features can not be supported ! Please change your explorer to Chrome !');
-        if(Sys.safari) alert('Safari: '+Sys.safari + 'Some of the features can not be supported ! Please change your explorer to Chrome !');
-   
-   
-   //
-}
+
+
 	$('.submit').click(function(){
 	   
 	   var id=$('.tid').text();
@@ -914,22 +892,30 @@ $(function () {
 
 
     // copy and paste
-    $("html").bind({
-        copy: function(){
-
-            //alert('copy behaviour detected!');
-            //console.log($(this));
-            widget = $(".selected").clone();
-
+   
+    if(browser=='Firefox'){
+	    
+	    $(document).keydown(function(e){
+        if(e.ctrlKey&&(e.keyCode==67)){
+        // alert("Ctrl+C was pressed!!");
+		 widget = $(".selected");
+		 console.log(widget);
+        // alert('firefox');
             left=[];
             top=[];
             number=$('.selected').size();
-        },
-        paste: function(){
-            var i=0;
-
-            for(i=0;i<number;i++){
-                var widgetnew=$(widget[i]).clone();
+       }
+	   });
+     
+        $(document).keydown(function(e) {
+        if(e.ctrlKey&&(e.keyCode==86)){
+            var j=0;
+			//alert('ddd')
+ 
+            for(j=0;j<number;j++){
+			   // alert('fff');
+                var widgetnew=$(widget[j]).clone();
+				//alert('aaa');
                 $("#canvas").append(widgetnew);
                 //$(widget[i]).addClass('existing-widget');
                 $(widgetnew).click(function(event){
@@ -943,66 +929,61 @@ $(function () {
                 $(widgetnew).removeClass('ui-draggable');
                 $(widgetnew).removeClass('ui-resizable');
                 $(widgetnew).find('.ui-resizable-handle').remove();
-				
-				
-				//contextmenu
-				changefont=$(widgetnew).find('.changefont')
-				for (var i=0;i<changefont.length;i++){
-                
+                //contextmenu
+                changefont=$(widgetnew).find('.changefont')
+               for (var i=0;i<changefont.length;i++){
+               
                     $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
-					    'BringtoBottom':func8,
+           'BringtoBottom':func8,
                         'Change-Font':func3,
-						'Background-Color':func4,},
+         'Background-Color':func4,},
                         'right');
-                }  
-                
-				iphone=$(widgetnew).find('.iphone')
-				for (var i=0;i<iphone.length;i++){
-                
+                } 
+               
+iphone=$(widgetnew).find('.iphone')
+for (var i=0;i<iphone.length;i++){
+               
                     $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
-					    'BringtoBottom':func8},
+    'BringtoBottom':func8},
                         'right');
-                }  
-				
+                } 
                 //arrow contextmenu
-				arrowcont=$(widgetnew).find('.widget-content');
-				for(var i=0;i<arrowcont.length;i++){
-				if($(arrowcont[i]).hasClass('arrow')){
-				  $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
+arrowcont=$(widgetnew).find('.widget-content');
+for(var i=0;i<arrowcont.length;i++){
+if($(arrowcont[i]).hasClass('arrow')){
+  $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
                         'Counterclockwise':func6},
                         'right');
-			    }
-				}
-				
-				crop=$(widgetnew).find('.crop');
-			      for(var i=0;i<crop.length;i++){
-				 $(crop[i]).contextmenu({ 
-					                    
-				                        'crop':func2},
-					                      'right');
-				}
-				
-				// contextmenu ends
+    }
+}
+crop=$(widgetnew).find('.crop');
+      for(var i=0;i<crop.length;i++){
+$(crop[i]).contextmenu({
+                   
+                        'crop':func2},
+                      'right');
+}
+// contextmenu ends
                 console.log($(widgetnew));
-
-                if(!left[i]){
-                    left[i]=$(widgetnew).position().left;
-                    top[i]=$(widgetnew).position().top;
-                    left[i]=left[i]-20;
-                    top[i]=top[i]-20;
+ 
+                if(!left[j]){
+                    left[j]=$(widgetnew).position().left;
+                    top[j]=$(widgetnew).position().top;
+                    left[j]=left[j]-20;
+                    top[j]=top[j]-20;
                 }
                 $(widgetnew).css('position', 'absolute');
-                $(widgetnew).css('top', top[i]);
-                $(widgetnew).css('left',left[i]);
-                left[i]=left[i]-20;
-                top[i]=top[i]-20;
-
+                $(widgetnew).css('top', top[j]);
+                $(widgetnew).css('left',left[j]);
+                left[j]=left[j]-20;
+                top[j]=top[j]-20;
+ 
                 console.log($(widgetnew));
-
+ 
                 $(widgetnew).find('.text-oneline').dblclick(makeEditable);
-				 $(widgetnew).find('.text-newline').dblclick(makeTextEditable);
+                $(widgetnew).find('.text-newline').dblclick(makeTextEditable);
                 $(widgetnew).find('.edit-list').dblclick(makeListEditable);
-               
+              
                 $(widgetnew).draggable({
                     start: function(event, ui) {
                         //get all selected...
@@ -1018,10 +999,10 @@ $(function () {
                         if (!prevLoc) {
                             prevLoc = ui.originalPosition;
                         }
-
+ 
                         var offsetLeft = currentLoc.left-prevLoc.left;
                         var offsetTop = currentLoc.top-prevLoc.top;
-
+ 
                         moveSelected(offsetLeft, offsetTop);
                         $(this).data('prevLoc', currentLoc);
                         //updateWidget(this);
@@ -1032,35 +1013,184 @@ $(function () {
                         }
                         return false;
                     },
-					stop: function(event){
-					   for(var k=0;k<selectedObjs.length;k++){
-		                 updateWidget(selectedObjs[k]);
+              stop: function(event){
+             for(var k=0;k<selectedObjs.length;k++){
+                 updateWidget(selectedObjs[k]);
                        }
-					    
-					}
-					
+   
+              }
                 });
-
+ 
                 $(widgetnew).resizable({
-
+ 
                     stop: function(event, ui){
-
+ 
                         updateWidget(this);
                     }
                 });
-
+ 
                 $(widgetnew).dblclick(bringtofront);
                 createWidget(widgetnew);
                 setDepthFront(widgetnew);
-
+ 
             }
-
-
-            $('.selected').removeClass("selected");  
-
+ 
+ 
+            $('.selected').removeClass("selected"); 
+ 
+        }
+    });
+   };
+   
+   if(browser=='Chrome'){
+   
+     $("html").bind({
+        copy: function(){
+ 
+            //alert('copy behaviour detected!');
+            //console.log($(this));
+            widget = $(".selected").clone();
+ 
+            left=[];
+            top=[];
+            number=$('.selected').size();
+			console.log(number);
+			console.log(widget);
+			
+        },
+        paste: function(){
+            var j=0;
+		//	alert('ddd')
+ 
+            for(j=0;j<number;j++){
+                var widgetnew=$(widget[j]).clone();
+			//	alert('aaa');
+                $("#canvas").append(widgetnew);
+                //$(widget[i]).addClass('existing-widget');
+                $(widgetnew).click(function(event){
+                    event.stopPropagation();
+                    if(!event.ctrlKey){
+                        $('.selected').removeClass("selected");
+                    }
+                    $(this).addClass("selected");
+                });
+                //    $(widget[i]).removeClass('draggable-widget');
+                $(widgetnew).removeClass('ui-draggable');
+                $(widgetnew).removeClass('ui-resizable');
+                $(widgetnew).find('.ui-resizable-handle').remove();
+                //contextmenu
+                changefont=$(widgetnew).find('.changefont')
+               for (var i=0;i<changefont.length;i++){
+               
+                    $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
+           'BringtoBottom':func8,
+                        'Change-Font':func3,
+         'Background-Color':func4,},
+                        'right');
+                } 
+               
+iphone=$(widgetnew).find('.iphone')
+for (var i=0;i<iphone.length;i++){
+               
+                    $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
+    'BringtoBottom':func8},
+                        'right');
+                } 
+                //arrow contextmenu
+arrowcont=$(widgetnew).find('.widget-content');
+for(var i=0;i<arrowcont.length;i++){
+if($(arrowcont[i]).hasClass('arrow')){
+  $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
+                        'Counterclockwise':func6},
+                        'right');
+    }
+}
+crop=$(widgetnew).find('.crop');
+      for(var i=0;i<crop.length;i++){
+$(crop[i]).contextmenu({
+                   
+                        'crop':func2},
+                      'right');
+}
+// contextmenu ends
+                console.log($(widgetnew));
+ 
+                if(!left[j]){
+                    left[j]=$(widgetnew).position().left;
+                    top[j]=$(widgetnew).position().top;
+                    left[j]=left[j]-20;
+                    top[j]=top[j]-20;
+                }
+                $(widgetnew).css('position', 'absolute');
+                $(widgetnew).css('top', top[j]);
+                $(widgetnew).css('left',left[j]);
+                left[j]=left[j]-20;
+                top[j]=top[j]-20;
+ 
+                console.log($(widgetnew));
+ 
+                $(widgetnew).find('.text-oneline').dblclick(makeEditable);
+                $(widgetnew).find('.text-newline').dblclick(makeTextEditable);
+                $(widgetnew).find('.edit-list').dblclick(makeListEditable);
+              
+                $(widgetnew).draggable({
+                    start: function(event, ui) {
+                        //get all selected...
+                        if (ui.helper.hasClass('selected')) selectedObjs = $('.selected');
+                        else {
+                            selectedObjs = $(ui.helper);
+                            $('.selected').removeClass('selected')
+                        }
+                    },
+                    drag: function(event, ui) {
+                        var currentLoc = $(this).position();
+                        var prevLoc = $(this).data('prevLoc');
+                        if (!prevLoc) {
+                            prevLoc = ui.originalPosition;
+                        }
+ 
+                        var offsetLeft = currentLoc.left-prevLoc.left;
+                        var offsetTop = currentLoc.top-prevLoc.top;
+ 
+                        moveSelected(offsetLeft, offsetTop);
+                        $(this).data('prevLoc', currentLoc);
+                        //updateWidget(this);
+                    },
+                    revert: function(event){
+                        if (!event){
+                            deleteWidget(this);
+                        }
+                        return false;
+                    },
+              stop: function(event){
+             for(var k=0;k<selectedObjs.length;k++){
+                 updateWidget(selectedObjs[k]);
+                       }
+   
+              }
+                });
+ 
+                $(widgetnew).resizable({
+ 
+                    stop: function(event, ui){
+ 
+                        updateWidget(this);
+                    }
+                });
+ 
+                $(widgetnew).dblclick(bringtofront);
+                createWidget(widgetnew);
+                setDepthFront(widgetnew);
+ 
+            }
+ 
+ 
+            $('.selected').removeClass("selected"); 
+ 
         },
     });
-
+ 
+   };
     //copy and paste ends
 
 
