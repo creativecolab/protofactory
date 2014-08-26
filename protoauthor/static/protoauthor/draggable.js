@@ -337,7 +337,7 @@ function changeImage(event,ui)
 
 
 function func1(e,e1){
-
+   
     setDepthFront($(e1));
     updateWidget($(e1));
 }
@@ -348,34 +348,7 @@ function func8(e,e8){
 
 }
 
-function func4(e,e4){
-    $('#picker').css('opacity',1);
-	$('#colorindex').show();
-	$('.now').removeClass('now');
-    $(e4).addClass('now');
-	var colornow=$('.now').find('.backcolor')[0];
-	//alert($(colornow).css('background-color'));
-	$('#picker').css('background-color', $(colornow).css('background-color'));
-	$('#picker').colpick({
-	
-    
-	onChange:function(hsb,hex,rgb,el) {
-		var ss=$('.now').find('.backcolor')[0];
-		$(ss).attr('style','background-color:#'+hex);
-		
-		updateWidget($('.now'));
-		//$('.now').removeClass('now');
-		
-	},
-	onSubmit:function(hsb,hex,rgb,el) {
-		$('#picker').css('background-color','#'+hex);
-		updateWidget($('.now'));
-		
-		$('#picker').colpickHide();
-		$('#colorindex').hide();
-	}
-})
-}
+
 
 
 
@@ -570,8 +543,28 @@ $(function () {
     $( "#dialog" ).dialog('open');
 	
 	});
+	
 
+    $('#picker').colpick({
+	
 
+    submit:0,
+	onChange:function(hsb,hex,rgb,el) {
+	    var select=$('.selected');
+	    for(var m=0;m<select.length;m++){
+		var ss=$(select[m]).find('.backcolor')[0];
+		$(ss).attr('style','background-color:#'+hex);
+		
+		updateWidget($(select[m]));
+	}	//$('.now').removeClass('now');
+		
+	},
+	
+	
+});
+   
+    
+    
     //$('#picker').colpick();
 
     //descriptions
@@ -681,7 +674,9 @@ $(function () {
             lowest = parseInt($(widgets[i]).css('z-index'));
         }
     }
-    //contextmenu
+    //
+    
+    
     /*
        changef=$('.existing-widget').find('.text');
        for(var i=0;i<changef.length;i++){
@@ -771,7 +766,7 @@ $(function () {
     $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
 	                    'bringtoBottom':func8,
                         'Change-Font':func3,
-						'Background-Color':func4},
+						  },
                         'right');
      }  
     }
@@ -936,7 +931,7 @@ $(function () {
                     $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
            'BringtoBottom':func8,
                         'Change-Font':func3,
-         'Background-Color':func4,},
+              },
                         'right');
                 } 
                
@@ -1085,7 +1080,7 @@ $(crop[i]).contextmenu({
                     $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
            'BringtoBottom':func8,
                         'Change-Font':func3,
-         'Background-Color':func4,},
+         },
                         'right');
                 } 
                
@@ -1272,7 +1267,7 @@ $(crop[i]).contextmenu({
                     $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
 					    'BringtoBottom':func8,
                         'Change-Font':func3,
-						'Background-Color':func4,},
+						},
                         'right');
                 }  
                 
@@ -1456,6 +1451,7 @@ $(crop[i]).contextmenu({
         removemenu(e);
         $(el).data('clickphase',true);
         setTimeout(function(){$(el).removeData('clickphase');},300);
+        $(el).addClass('selected');
         var m = $('<ul id="'+$.contextmenu+'">');
         $.each(menu, function(n,a) {
             if(typeof a == 'function') {

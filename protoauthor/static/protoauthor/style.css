@@ -2,6 +2,7 @@ html {
     margin: 0;
     padding: 0;
     background-color: white;
+    font-family:Verdana;
 }
 
 body {
@@ -63,7 +64,8 @@ min-height:15px;
 
 #palette{
     width:100%;
-    height:90px;
+    
+    height:75px;
     float:left;
     background-color:grey;
     display:inline;
@@ -105,27 +107,29 @@ min-height:15px;
 }
 
 #picker{
-      float: right;
-    width: 40px;
-    height: 40px;
-    overflow: none;
-	position:relative;
-	left:10px;
-	border-style: ridge;
-    border-width: 12px;
-	background-color:red;
     
+    width: 120px;
+    height: 85px;
+    overflow: none;
+	position:absolute;
+	right:1%;
+	top:7%;
+	background-repeat: no-repeat;
+    background-position:center; 
+    background-size:100% 100%;
+	
+    background-image: url('http://inspirationalleather.com/wp-content/uploads/2014/06/color_icon.png');
  }
 
 #help{
     position:absolute;
-	top:0%;
-	left:15%;
-    width: 60px;
-    height: 60px;
+    left:84%;
+    top:0.5%;
+    width: 50px;
+    height: 50px;
     overflow: none;
     z-index:1;
-    background-image: url('http://www.spu.edu/findmyid/images/help.png');
+    background-image: url('http://cdn-img.easyicon.net/png/110/11016.png');
     background-repeat: no-repeat;
     background-position:center; 
     background-size:100% 100%;
@@ -145,6 +149,7 @@ min-height:15px;
 .input-box-background{
     border-style: solid;
     border-width: 2px;
+    height:51px;
     background-repeat: no-repeat;
     background-position:center; 
     background-size:100% 100%;
@@ -181,9 +186,11 @@ min-height:15px;
 }
 
 .draggable-widget{
-    width: 125px;
+    postion:relative;
+    top:10px;
+    width: 120px;
     padding: 5px;
-    height: 65px;
+    height: 55px;
 	
     cursor: move;
     font-family:sans-serif;
@@ -213,6 +220,7 @@ min-height:15px;
 }
 
 .check1-background{
+    
     background-image: url('http://www.clker.com/cliparts/4/h/F/B/m/4/nxt-checkbox-checked-ok-md.png');
     background-repeat: no-repeat;
     background-position:center; 
@@ -247,7 +255,7 @@ min-height:15px;
 }
 
 .selected{
-    border :dotted 3px red ;
+    border :dotted 2px red ;
 }
 
 #addown{
