@@ -1,9 +1,26 @@
 from django.db import models
 import json
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+
 
 # Create your models here.
 class Interface(models.Model):
     name = models.CharField(max_length=200)
+
+class User(models.Model):
+	
+	interface_id = models.CharField(max_length=200)
+	task = models.CharField(max_length=200)
+	timespent = models.CharField(max_length=200)
+	os = models.CharField(max_length=200)
+	browser = models.CharField(max_length=200)
+	age = models.CharField(max_length=200)
+	gender = models.CharField(max_length=200)
+	country = models.CharField(max_length=200)
+	evaluation = models.CharField(max_length=200)
+	experience = models.CharField(max_length=200)
+    
 
 class Widget(models.Model):
     interface = models.ForeignKey(Interface)

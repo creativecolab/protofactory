@@ -1,3 +1,4 @@
+{% csrf_token %}
 {% load staticfiles %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
@@ -12,15 +13,164 @@
 <script type="text/javascript" src="http://jqueryrotate.googlecode.com/svn/trunk/jQueryRotate.js"></script>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
+<script>
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+// DONE DJANGO HACK
+
+
+function get_user_id(){
+    var href = $(location).attr("href");
+    var vals = href.split('/');
+    return  vals[vals.length - 2];
+}
+
+function get_site_prefix(){
+    var href = $(location).attr("href");
+    var vals = href.split('/');
+    var prefix = "/";
+    if (vals[3] == vals[vals.length-5]){
+        prefix = prefix + vals[3] + "/";
+    }
+    return prefix
+}
+
+
+function gettime(timer,tasknumber){
+	
+	var prefix = get_site_prefix();
+    var user_id = get_user_id();
+    
+    $.ajax({
+        type: "POST",
+        url: prefix + "gettime/", 
+        data: { 
+        user_id: user_id, 
+        timespent: timer,
+        task:tasknumber,
+            }});
+     console.log(timer);
+}
+
+
+$(function (){
+var csrftoken = getCookie('csrftoken');
+var timer=0;
+ var tasknumber=Math.floor((Math.random() * 2) + 1);
+   console.log(tasknumber);
+   var link='';
+ var timeout=setInterval(function () {timer++;}, 1000);
+ $('.ui-dialog-buttonpane').css("background-color",'white');
+  $('.ui-dialog-buttonpane').css("margin-top",'0');
+   $('.ui-dialog-buttonpane').css("padding",'0');
+   if(tasknumber==1){
+	 $('#task-detail').html('<p>Your task is to recreate the picture below. Please use the items in our tool or you can add your own pictures. Once you finish, click the button [submit] . Your time will be recorded : </p>');
+	 $('#openlink').click(function(){
+		window.open('http://youtu.be/EAiBMmBNrjo', 'test', 'width=600, height=600'); 
+	 });
+	 $('#task1').html('Your task is to recreate the picture below.');
+	 $('#task2').click(function(){
+		window.open('http://youtu.be/EAiBMmBNrjo', 'test', 'width=600, height=600'); 
+	 });
+	 $('#task3').html('See the picture');
+   }
+   
+   if(tasknumber==2){
+	 $('#task-detail').html('<p>Your task is to use our tool to make a prototype of the sketch below. Please use the items in our tool or you can add your own pictures. Just make your prototype look like the sketch as much as possible. Once you finish, click the button [submit] . Your time will be recorded : </p>');
+	 $('#openlink').click(function(){
+		window.open('http://finance.yahoo.com/q?s=HTM', 'test', 'width=600, height=600'); 
+	 });
+	 $('#code').html('See the sketch');
+	  $('#task1').html('Your task is to make a prototype of the sketch below.');
+	 $('#task2').click(function(){
+		window.open('http://youtu.be/EAiBMmBNrjo', 'test', 'width=600, height=600'); 
+	 });
+	 $('#task3').html('See the sketch');
+   }
+   
+
+	$('.submit').click(function(){
+	    gettime(timer,tasknumber);
+	    
+	   var id=$('.tid').text();
+	   console.log(id);
+	   var r = confirm("Submit Your Work ? ");
+	
+       if (r == true) {
+	   
+        alert(id+ '\n *************************\n------------------------------------\n Your TIME is :'+timer + 's\n ****************************\n');
+	          } 
+	   
+	   
+	});
+    
+    $.ajaxSetup({
+        crossDomain: false, // obviates need for sameOrigin test
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+ });
+    // END DJANGO AJAX
+
+</script>
+
+<nav role='navigation' class='nav' >
+ <span style="font-size:20px">☰</span>
+ <div class='task' style='opacity:0;'>
+ <span id='task1'> Your task is to recreate the picture below: </span>
+  <button id="task2">
+    <code id='task3' style="font-size:14px;">See the picture</code>
+  </button>
+  <br/>
+  <br/>
+  <span> About how to use this tool: </span>
+  <button id='help1' onclick="window.open('http://protolab.cs.cmu.edu/protofactory/help', 'test', 'width=600, height=600');">
+    <code style="font-size:15px;">Help</code>
+  </button>
+  <br/>
+  <br/>
+  <span> Your can also watch our video: </span>
+  <button onclick="window.open('http://youtu.be/EAiBMmBNrjo', 'test', 'width=400, height=400');">
+    <code style="font-size:14px;">Watch teaching video</code>
+  </button>
+
+  </div> 
+ 
+</nav> 
+
+
+
+<body>
+
+
 
 <div id="nav" style="background-color:#93db86; height:60px;">
     <!-- <a href="" style="color:#373737">Back</a> -->
-	<span style="position:relative; left:25%;
+	<span style="position:relative;left:4%;
         margin:auto;font-size:42px;font-family:Verdana;"> Prototype
         Factory </span> 
-	<span class='time' style="font-size:30px; position:relative; left:33%; "></span>
-    <span class='tid' style="font-size:30px; float: right; color:white;">Your TURK ID is: {{ interface.id }} </span>
-	<img class='submit' style="float:left; width:180px; height:59px" src="http://gentleninja.com/wp-content/uploads/2012/07/submit.png"> </img>
+ 
+	<a href="{% url 'survey' user.id%}"><img class='submit' style="float:right; width:180px; height:57px"  src="http://gentleninja.com/wp-content/uploads/2012/07/submit.png"></img></a>
 	
 	<br/>
 	<br/>
@@ -30,17 +180,13 @@
 	<br/>
   
 </div>
+
+
 <div id="palette" style="background: rgba(147, 219, 134, 0.2);">
 
  
 
-    <div class="draggable-widget" id="arrow-w" >
-        <div class="widget-content arrow">
-		  
-            <img class="full-sized" style="width:90%;height：90%" src="http://i.imgur.com/RxOTh5a.png">
-        </div>	
-    </div>
-
+    
     <!--
     <div class="draggable-widget">
         <div class="widget-content">
@@ -49,43 +195,37 @@
     </div>
     -->
 	
-	  <div class="draggable-widget" id="textlabel-w">
-        <div class="widget-content table changefont">
-            <div class="vcenter hcenter full-sized backcolor ">
-                <div class="text-oneline fontsize" style="font-size:20px" >Text Label</div>
-            </div>
-        </div>
-    </div>
+	 
 
-    <div class="draggable-widget" id="inputbox-w">
+    <div class="draggable-widget" id="inputbox-w" style="z-index:200;">
         <div class="widget-content changefont">
             <div class="full-sized input-box-background table backcolor">
                 <div class="full-sized vcenter hcenter">
-                    <div class="text-newline fontsize" style="font-size:20px" >Input box</div>
+                    <div class="text-newline fontsize" style="font-size:18px;" >Input box</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="draggable-widget" id="button-w">
+    <div class="draggable-widget" id="button-w" style="z-index:200;">
         <div class="widget-content changefont">
             <div class="white-background full-sized">
-                <div class="full-sized button-background table backcolor">
+                <div class="full-sized button-background table backcolor ">
                     <div class="vcenter hcenter full-sized">
-                        <div class="text-oneline fontsize" >Button</div>
+                        <div class="text-oneline fontsize" style="font-size:18px" >Button</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>	
 
-    <div class="draggable-widget" id="droplist-w">
+    <div class="draggable-widget" id="droplist-w" style="z-index:200;">
         <div class="widget-content changefont">
             <div class="white-background full-sized">
                 <div class="droplist-background backcolor">
                     <div class="droplist-left table">
                         <div class="vcenter hcenter full-sized">
-                            <div class="text-oneline fontsize" >Drop List</div>
+                            <div class="text-oneline fontsize" style="font-size:18px">Droplist</div>
                         </div>
                     </div>
                 </div>
@@ -93,50 +233,67 @@
         </div>
     </div>
 
-    <div class="draggable-widget" id="list-w">
+    <div class="draggable-widget" id="textlabel-w" style="z-index:200;">
+        <div class="widget-content table changefont">
+            <div class="vcenter hcenter full-sized backcolor ">
+                <div class="text-oneline fontsize" style="font-size:18px" >Text Label</div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="draggable-widget" id="list-w" style="position:relative;top:3px;z-index:200;">
         <div class="widget-content changefont backcolor">
-            <ul class="edit-list fontsize"><li>List</li></ul>
+            <ul class="edit-list fontsize"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>
         </div>
     </div>
     
-	<div class="draggable-widget"  style="width:50px;" >
-        <div class="widget-content check" >
-            <div class="check-background full-sized backcolor"></div>
-        </div>
+      <div class="draggable-widget" id="arrow-w" style="z-index:200;">
+        <div class="widget-content arrow">
+		  
+            <img class="full-sized " style="width:90%;height：93%" src="http://www.traininguri.ro/wp-content/uploads/2014/04/right_arrow.png"> 
+        </div>	
     </div>
+    
+    
+
 	
-	<div class="draggable-widget" style="width:50px;" >
+	<div class="draggable-widget" id="checkbox-w" style="width:50px;" style="z-index:200;">
         <div class="widget-content check" >
             <div class="check1-background full-sized backcolor"></div>
         </div>
     </div>
 	
-    <div class="draggable-widget" id="iphone-w" style="width:40px;" >
+    <div class="draggable-widget" id="iphone-w" style="position:relative; left:12px; top:-4px; width:36px;height:60px;z-index:200;"  >
         <div class="widget-content iphone" id="iphone">
             <div class="iphone-background full-sized backcolor"></div>
         </div>
     </div>	
 	
-
+    
 	
 	
-    <div class="draggable-widget" id="addmyown">
+    <div class="draggable-widget" id="addmyown" style="position:relative; left:20px;top:5px;width:70px;height:55px">
        <div class="widget-content crop">
             <img class="widget" id="addown" src="http://images.wikia.com/clubpenguin/images/6/6c/Add_image_icon.svg" >
       </div>
     </div>	
     
-    <div class="description" id="addownex"> Drag it down on the canvas and double-click to change the picture</div>
-    <div class="description" id="iphonex"> This is an iphone layout</div>
-	<div class="description" id="listx"> Double-click to edit(The dot will be automatically added to a new line) </div>
-	<div class="description" id="droplistx"> This is a droplist. Double-click to edit </div>
-	<div class="description" id="buttonx"> This is a button. Double-click to edit </div>
-	<div class="description" id="inputboxx"> This is a inputbox. Double-click to edit </div>
-	<div class="description" id="arrowx"> This is a arrow. Right-click to change to direction </div>
-	<div class="description" id="textlabelx"> This is a textlabel. Double-click to edit </div>
+    <div class="description" id="addownex"> Custome Image: Drag it down and double-click to change</div>
+    <div class="description" id="iphonex"> Iphone layout: Drag down to add</div>
+	<div class="description" id="listx"> List: Double-click to edit </div>
+	<div class="description" id="droplistx"> Droplist: Double-click to edit </div>
+	<div class="description" id="buttonx"> Button: Double-click to edit </div>
+	<div class="description" id="inputboxx"> Inputbox: Double-click to edit </div>
+	<div class="description" id="arrowx"> Arrow: Right-click to rotate </div>
+	<div class="description" id="textlabelx"> Textlabel: Double-click to edit </div>
+	<div class="description" id="checkboxx"> Checkbox:Drag down to add</div>
+	<div id='pen'></div>
+    <div id='picker'></div>
 	
 	
-   <div id="dialog" class='dia' title="Operating Director" style="background-color:white" > <p style="font-size:18px;" >1. Drag and Drop: Please drag the element from the items'bar to the canvas.If you want to 
+	
+   <div id="dialog" class='dia' title="help" style="background-color:white" > <p style="font-size:18px;" >1. Drag and Drop: Please drag the element from the items'bar to the canvas.If you want to 
    delete the items, make sure you have selected it (with red edges), then press 'delete' on the keyboard !</p>
    <p>   2. Bring to front/bottom: Right click the item on the canvas, you will see a 
    button called 'bring to front/bottom' </p>
@@ -155,13 +312,33 @@
    
    </div>
    
-	<div id='picker'></div>
+ 
 
 
-</div>	
-<div id="help"></div>
+</div>
 
 
+   <div id="dialog2" class='dia' title="Your Task" style="background-color:white;" > <div id='task-detail'> <p style="font-size:20px;" >a</p>
+    </div>
+  
+     <button id='openlink'>
+    <code style="font-size:16px;" id='code'>See the picture</code>
+     </button>
+   
+  <br/>
+  <br/>
+  <span> About how to use this tool: </span>
+  <button id='help' onclick="window.open('http://protolab.cs.cmu.edu/protofactory/help', 'test', 'width=600, height=600');">
+    <code style="font-size:16px;">Help</code>
+  </button>
+  <br/>
+  <br/>
+  <span> Your can also watch our video: </span>
+  <button onclick="window.open('http://youtu.be/EAiBMmBNrjo', 'test', 'width=600, height=600');">
+    <code style="font-size:16px;">Watch teaching video</code>
+  </button>
+  <p style="font-size:16px"> (You can also see these information when clicking the '☰' on left top.) </p>
+   </div>
 
 <div class="clear"></div>
 
@@ -173,4 +350,4 @@
     {% endfor %}
 
 </div>
-
+</body>

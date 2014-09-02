@@ -9,7 +9,7 @@ var y1=0;
 var y2=0;
 var candelete=1;
 var timeoutId = 0;
-var timer=0;
+
 
 // DJANGO hack to be able to post with CSRF
 // using jQuery
@@ -109,18 +109,26 @@ function redo(){
 function get_interface_id(){
     var href = $(location).attr("href");
     var vals = href.split('/');
-    return  vals[vals.length - 2];
+    return  vals[vals.length - 3];
 }
 
 function get_site_prefix(){
     var href = $(location).attr("href");
     var vals = href.split('/');
     var prefix = "/";
-    if (vals[3] == vals[vals.length-4]){
+    if (vals[3] == vals[vals.length-5]){
         prefix = prefix + vals[3] + "/";
     }
     return prefix
 }
+
+function get_user_id(){
+    var href = $(location).attr("href");
+    var vals = href.split('/');
+    return  vals[vals.length - 2];
+}
+
+
 
 function createWidget(widget){
     var prefix = get_site_prefix();
@@ -129,7 +137,7 @@ function createWidget(widget){
         type: "POST",
         url: prefix + "createWidget/", 
         data: { 
-            interface_id: interface_id, 
+        interface_id: interface_id, 
         value: $(widget).find(".widget-content")[0].outerHTML, 
         top: $(widget).css('top'), 
         left: $(widget).css('left'), 
@@ -337,7 +345,7 @@ function changeImage(event,ui)
 
 
 function func1(e,e1){
-
+   
     setDepthFront($(e1));
     updateWidget($(e1));
 }
@@ -348,34 +356,7 @@ function func8(e,e8){
 
 }
 
-function func4(e,e4){
-    $('#picker').css('opacity',1);
-	$('#colorindex').show();
-	$('.now').removeClass('now');
-    $(e4).addClass('now');
-	var colornow=$('.now').find('.backcolor')[0];
-	//alert($(colornow).css('background-color'));
-	$('#picker').css('background-color', $(colornow).css('background-color'));
-	$('#picker').colpick({
-	
-    
-	onChange:function(hsb,hex,rgb,el) {
-		var ss=$('.now').find('.backcolor')[0];
-		$(ss).attr('style','background-color:#'+hex);
-		
-		updateWidget($('.now'));
-		//$('.now').removeClass('now');
-		
-	},
-	onSubmit:function(hsb,hex,rgb,el) {
-		$('#picker').css('background-color','#'+hex);
-		updateWidget($('.now'));
-		
-		$('#picker').colpickHide();
-		$('#colorindex').hide();
-	}
-})
-}
+
 
 
 
@@ -489,6 +470,25 @@ function checkdelete(e,ui)
     }
 }
 
+
+function fonthelp(){
+	alert('You can do the following things to this item\n 1.Bring to front/Bottom: Right-click the item and click the  [bring to front/bottom] button\n 2. Change font: Right-click the item and input the font-size  \n 3.Change the text color: Select the item first (with red edges), then click the [text-color] button at the top-right corner to choose color.\n 4.Change the background: Select the item first, then click the [paint-bucket] button .\n 5.For list: Everytime you input a new line in the textarea, a dot will be automatically added! ');
+	
+}
+
+function iphonehelp(){
+	alert('You can do the following things to this item\n 1.Bring to front/Bottom: Right-click the item and click the  [bring to front/bottom] button\n 2.Resize: Drag the right-bottom corner of the item. Press ［shift］ to fix aspect ratio.');
+	
+}
+
+function arrowhelp(){
+	alert('You can do the following things to this item\n 1.Clockwise-Rotate: Right-click the item and click the  [Clockwise-Rotate] button\n 2.Counterclockwise-Rotate: Click the [Counterclockwise]button.');
+}
+
+function crophelp(){
+	alert('You can do the following things to this item\n 1.Crop: Right-click the item and click the  [Crop] button. Then drag the window to cover what you want to crop.When you finish, press [enter] on your keyboard.\n 2.Resize: Drag the right-bottom corner of the item. Press ［shift］ to fix aspect ratio.')}
+
+
 function get_browser(){
     var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []; 
     if(/trident/i.test(M[1])){
@@ -503,6 +503,16 @@ function get_browser(){
     if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
     return M[0];
     }
+    
+function rgb2hex(rgb) {
+    if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+
+    rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    function hex(x) {
+        return ("0" + parseInt(x).toString(16)).slice(-2);
+    }
+    return  hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+}
 
 $(function () {
 
@@ -521,25 +531,14 @@ $(function () {
     for (var i = 0; i < 20; i++) left[i] = 0;
     for (var i = 0; i < 20; i++) top[i] = 0;
     var selectone;
+   
+  
     //var addmy=$(".existing-widget").find("#addown");
     var browser=get_browser();
     console.log(browser);
    
+   
 
-
-	$('.submit').click(function(){
-	   
-	   var id=$('.tid').text();
-	   console.log(id);
-	   var r = confirm("Submit Your Work ? ");
-       if (r == true) {
-	    window.clearInterval(timeoutId);
-        alert(id+ '\n *************************\n------------------------------------\n Your TIME is :'+timer + 's\n ****************************\n-----------------------------\n' + '!!Please remember your TURKEY ID and put it in the Turkey response!!');
-	   $('.time').text('Time:'+timer+'s');
-       } 
-	   
-	   
-	});
 	
        var rx = /INPUT|SELECT|TEXTAREA/i;
 
@@ -563,6 +562,16 @@ $(function () {
         duration: 1000
       }
     });
+    $( "#dialog2" ).dialog({
+      autoOpen: true,
+	  width:1300,
+      modal: true,
+      buttons: {
+        Ok: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
 	
 	
     $('#help').click(function(){
@@ -570,8 +579,66 @@ $(function () {
     $( "#dialog" ).dialog('open');
 	
 	});
+	
 
+    $('#picker').colpick({
+	
 
+    submit:0,
+    onShow:function(hsb,hex,rgb,el){
+	    var select=$('.selected');
+	    var color=$(select[0]).find('.backcolor').css("background-color");
+	    console.log(color);
+	    if(color!="rgba(0, 0, 0, 0)"){ 
+	    $('#picker').colpickSetColor(rgb2hex(color));}
+	    else{$('#picker').colpickSetColor('ffffff');}
+	    
+    },
+	onChange:function(hsb,hex,rgb,el) {
+	    var select=$('.selected');
+	    for(var m=0;m<select.length;m++){
+		var ss=$(select[m]).find('.backcolor')[0];
+		$(ss).attr('style','background-color:#'+hex);
+		
+		updateWidget($(select[m]));
+	}	//$('.now').removeClass('now');
+		
+	},
+	
+	
+});
+   
+    $('#pen').colpick({
+	
+
+    submit:0,
+    onShow:function(hsb,hex,rgb,el){
+	    var select=$('.selected');
+	    var color=$(select[0]).find('.fontsize').css("color");
+	    console.log(color);
+	    if(color!="rgba(0, 0, 0, 0)"){ 
+	    $('#pen').colpickSetColor(rgb2hex(color));}
+	    else{$('#pen').colpickSetColor('ffffff');}
+	    $('#pen').colpickSetColor(rgb2hex(color));
+	    
+    },
+	onChange:function(hsb,hex,rgb,el) {
+	    var select=$('.selected');
+	    for(var m=0;m<select.length;m++){
+		var ss=$(select[m]).find('.fontsize')[0];
+		var ar=$(ss).attr('style');
+		console.log(ar);
+		$(ss).attr('style',ar+';color:#'+hex);
+		
+		updateWidget($(select[m]));
+	}	//$('.now').removeClass('now');
+		
+	},
+	
+	
+});
+
+    
     //$('#picker').colpick();
 
     //descriptions
@@ -594,6 +661,13 @@ $(function () {
         $("#listx").show();
     }).mouseout(function() {
         $("#listx").hide();
+    });
+    
+    $("#checkbox-w").mouseover(function(){
+
+        $("#checkboxx").show();
+    }).mouseout(function() {
+        $("#checkboxx").hide();
     });
 	
 	$("#droplist-w").mouseover(function(){
@@ -652,6 +726,13 @@ $(function () {
         this.css('z-index', --lowest); // increase highest by 1 and set the style
     };
 
+
+    $('.nav').mouseenter(function(){
+	    $('.task').css('opacity','1');
+    });
+    $('.nav').mouseleave(function(){
+	    $('.task').css('opacity','0');
+    });
     //Handle existing widgets
     $('.existing-widget').find('.text-oneline').dblclick(makeEditable);
 	$('.existing-widget').find('.text-newline').dblclick(makeTextEditable);
@@ -681,7 +762,9 @@ $(function () {
             lowest = parseInt($(widgets[i]).css('z-index'));
         }
     }
-    //contextmenu
+    //
+    
+    
     /*
        changef=$('.existing-widget').find('.text');
        for(var i=0;i<changef.length;i++){
@@ -771,7 +854,7 @@ $(function () {
     $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
 	                    'bringtoBottom':func8,
                         'Change-Font':func3,
-						'Background-Color':func4},
+						  },
                         'right');
      }  
     }
@@ -936,7 +1019,7 @@ $(function () {
                     $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
            'BringtoBottom':func8,
                         'Change-Font':func3,
-         'Background-Color':func4,},
+              },
                         'right');
                 } 
                
@@ -1085,7 +1168,7 @@ $(crop[i]).contextmenu({
                     $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
            'BringtoBottom':func8,
                         'Change-Font':func3,
-         'Background-Color':func4,},
+         },
                         'right');
                 } 
                
@@ -1223,10 +1306,22 @@ $(crop[i]).contextmenu({
 
     // Make canvas droppable
     $("#canvas").droppable({
+        activate: function(event, ui) {
+            if (!($(ui.draggable).hasClass('existing-widget') || $(ui.draggable).hasClass('ui-dialog'))){
+                //widget = $(ui.draggable).clone();
+			   widget = $(ui.draggable).clone(); 
+			   $(widget).bringToTop();
+			   console.log($(widget).css('z-index'));
+			   };
+	    },
+            
+              
+        
         drop: function(event, ui) {
             if (!($(ui.draggable).hasClass('existing-widget') || $(ui.draggable).hasClass('ui-dialog'))){
-                widget = $(ui.draggable).clone();
-				
+                //widget = $(ui.draggable).clone();
+			   // widget = $(ui.draggable).clone();
+
                 $(this).append(widget);
                 $('#canvas .draggable-widget').addClass('existing-widget');
                 //		myown=$(widget).find("#addown");
@@ -1272,7 +1367,8 @@ $(crop[i]).contextmenu({
                     $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
 					    'BringtoBottom':func8,
                         'Change-Font':func3,
-						'Background-Color':func4,},
+                        'help':fonthelp,
+						},
                         'right');
                 }  
                 
@@ -1280,7 +1376,8 @@ $(crop[i]).contextmenu({
 				for (var i=0;i<iphone.length;i++){
                 
                     $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
-					    'BringtoBottom':func8},
+					    'BringtoBottom':func8,
+					    'help':iphonehelp,},
                         'right');
                 }  
 				
@@ -1293,7 +1390,8 @@ $(crop[i]).contextmenu({
 				for(var i=0;i<arrowcont.length;i++){
 				if($(arrowcont[i]).hasClass('arrow')){
 				  $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
-                        'Counterclockwise':func6},
+                        'Counterclockwise':func6,
+                        'help':arrowhelp,},
                         'right');
 			    }
 				}
@@ -1304,7 +1402,8 @@ $(crop[i]).contextmenu({
 			
 				 $(crop[i]).contextmenu({ 
 					                    
-				                        'crop':func2},
+				                        'crop':func2,
+				                        'help':crophelp,},
 					                      'right');
 				}
 				
@@ -1427,7 +1526,7 @@ $(crop[i]).contextmenu({
                 });
 
                 createWidget(widget);
-                setDepthFront(widget);
+                $(widget).find('.widget-content').attr("depth", $(widget).css('z-index'));
             }
             else{
                 widget = $(ui.draggable);
@@ -1456,6 +1555,7 @@ $(crop[i]).contextmenu({
         removemenu(e);
         $(el).data('clickphase',true);
         setTimeout(function(){$(el).removeData('clickphase');},300);
+        $(el).addClass('selected');
         var m = $('<ul id="'+$.contextmenu+'">');
         $.each(menu, function(n,a) {
             if(typeof a == 'function') {

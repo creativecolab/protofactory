@@ -8,17 +8,32 @@ from protoauthor.models import Interface
 from protoauthor.models import Widget
 from protoauthor.models import Log
 from protoauthor.models import Undo
+from protoauthor.models import User
 
 def index(request):
     interfaces = Interface.objects.all()
     context = {'interfaces': interfaces}
     return render(request, 'protoauthor/index.html', context)
+	
 
 def newDesign(request):
     name = "AutoGen"
     interface = Interface(name=name)
     interface.save()
-    return redirect('protoauthor.views.updateInterface', interface.id)
+    turk_id ="0"
+    user = User(interface_id=interface.id, task="1", timespent="0",os="0",browser="0",age="0",gender="0",country="0",evaluation="0",experience="0")
+    user.save()
+    
+    return redirect('protoauthor.views.updateInterface', interface.id,user.id)
+    
+
+def help(request):
+	return render(request,'protoauthor/help.html')
+
+def survey(request,user_id):
+	user=get_object_or_404(User,pk=user_id)
+	return render(request,'protoauthor/survey.html',{'user':user,})
+
 
 def createInterface(request):
     if request.method == 'POST' and request.POST['name'] != "":
@@ -26,13 +41,14 @@ def createInterface(request):
         interface.save()
     return redirect('protoauthor.views.index')
 
-def updateInterface(request, interface_id):
+def updateInterface(request, interface_id,user_id):
     interface = get_object_or_404(Interface, pk=interface_id)
+    user = get_object_or_404(User, pk=user_id)
     widgets = interface.widget_set.filter(active=True)
     return render(request, 'protoauthor/updateInterface.html', {'interface':
                                                                 interface,
                                                                 'widgets':
-                                                                widgets})
+                                                                widgets,'user':user,})
 
 def deleteInterface(request, interface_id):
     interface = Interface.objects.get(pk=interface_id)
@@ -46,6 +62,29 @@ def viewInterface(request, interface_id):
                                                                 interface,
                                                                 'widgets':
                                                                 widgets})
+                                                                
+def getsurvey(request):
+    if request.method != 'POST' and request.POST:
+        return HttpResponse("ERROR")
+    post = request.POST.dict()
+    user = User.objects.get(pk=post['user_id'])
+    user.age=post['age']
+    user.country=post['country']
+    user.evaluation=post['evaluation']
+    user.save()
+    return HttpResponse('Update user')
+
+def gettime(request):
+    if request.method != 'POST' and request.POST:
+        return HttpResponse("ERROR")
+    post = request.POST.dict()
+    user = User.objects.get(pk=post['user_id'])
+    user.timespent = post['timespent']
+    user.task = post['task']
+    user.save()
+    return HttpResponse('Update timer')                                                                                                                                
+
+
 
 def createWidget(request):
     if request.method != 'POST' and request.POST:
@@ -258,3 +297,4 @@ def deleteWidget(request):
     Undo.objects.filter(interface=widget.interface, is_redo=True).delete()
 
     return HttpResponse('OK')
+
