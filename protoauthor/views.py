@@ -20,7 +20,7 @@ def newDesign(request):
     name = "AutoGen"
     interface = Interface(name=name)
     interface.save()
-    turk_id ="0"
+    turk_id ="1"
     user = User(interface_id=interface.id, task="1", timespent="0",os="0",browser="0",age="0",gender="0",country="0",evaluation="0",experience="0")
     user.save()
     
