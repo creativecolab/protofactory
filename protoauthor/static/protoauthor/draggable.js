@@ -637,7 +637,6 @@ $(function () {
 	
 	
 });
-
     
     //$('#picker').colpick();
 
