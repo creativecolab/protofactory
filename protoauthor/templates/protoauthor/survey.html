@@ -1,0 +1,273 @@
+{% csrf_token %}
+{% load staticfiles %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+
+<script>
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+// DONE DJANGO HACK
+
+
+function get_user_id(){
+    var href = $(location).attr("href");
+    var vals = href.split('/');
+    return  vals[vals.length - 2];
+}
+
+function get_site_prefix(){
+    var href = $(location).attr("href");
+    var vals = href.split('/');
+    var prefix = "/";
+    if (vals[3] == vals[vals.length-4]){
+        prefix = prefix + vals[3] + "/";
+    }
+    return prefix
+}
+
+
+function getsurvey(experience,gender,os,browser,evaluation){
+	
+	var prefix = get_site_prefix();
+    var user_id = get_user_id();
+    
+    $.ajax({
+        type: "POST",
+        url: prefix + "getsurvey/", 
+        data: { 
+        user_id: user_id, 
+        name:$('.name').val(),
+        age:$('.age').val(),
+        country:$('.country').val(),
+        experience:experience,
+        gender:gender,
+        os:os,
+        browser:browser,
+        evaluation:evaluation,
+    }});
+}
+
+
+$(function () {
+var csrftoken = getCookie('csrftoken');
+  $('.submit').click(function(event){
+    var gender='';
+    var experience='';
+    var evaluation=$('.advice').val();
+    if($('.male').is(':checked')&& $('.male').val()=='male'){ gender='male';}
+    if($('.female').is(':checked')&& $('.female').val()=='female'){gender='female';}
+    if($('.e1').is(':checked')&& $('.e1').val()=='e1'){experience='prettymuch';}
+    if($('.e2').is(':checked')&& $('.e2').val()=='e2'){experience='good';}
+    if($('.e3').is(':checked')&& $('.e3').val()=='e3'){experience='fair';}
+    if($('.e4').is(':checked')&& $('.e4').val()=='e4'){experience='none';}
+    console.log(experience);
+    console.log(gender);
+    getsurvey(experience,gender,os,browser,evaluation);
+    alert('submit succeed!');
+    
+    
+  });
+  
+    $.ajaxSetup({
+        crossDomain: false, // obviates need for sameOrigin test
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+    // END DJANGO AJAX
+
+
+
+ 
+    var BrowserDetect = {
+      init: function () {
+        this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
+        this.version = this.searchVersion(navigator.userAgent) || this.searchVersion(navigator.appVersion) || "an unknown version";
+        this.OS = this.searchString(this.dataOS) || "an unknown OS";
+      },
+      searchString: function (data) {
+        for (var i = 0; i < data.length; i++) {
+          var dataString = data[i].string;
+          var dataProp = data[i].prop;
+          this.versionSearchString = data[i].versionSearch || data[i].identity;
+          if (dataString) {
+            if (dataString.indexOf(data[i].subString) != -1) return data[i].identity;
+          } else if (dataProp) return data[i].identity;
+        }
+      },
+      searchVersion: function (dataString) {
+        var index = dataString.indexOf(this.versionSearchString);
+        if (index == -1) return;
+        return parseFloat(dataString.substring(index + this.versionSearchString.length + 1));
+      },
+      dataBrowser: [{
+        string: navigator.userAgent,
+        subString: "Chrome",
+        identity: "Chrome"
+      }, {
+        string: navigator.userAgent,
+        subString: "OmniWeb",
+        versionSearch: "OmniWeb/",
+        identity: "OmniWeb"
+      }, {
+        string: navigator.vendor,
+        subString: "Apple",
+        identity: "Safari",
+        versionSearch: "Version"
+      }, {
+        prop: window.opera,
+        identity: "Opera"
+      }, {
+        string: navigator.vendor,
+        subString: "iCab",
+        identity: "iCab"
+      }, {
+        string: navigator.vendor,
+        subString: "KDE",
+        identity: "Konqueror"
+      }, {
+        string: navigator.userAgent,
+        subString: "Firefox",
+        identity: "Firefox"
+      }, {
+        string: navigator.vendor,
+        subString: "Camino",
+        identity: "Camino"
+      }, { // for newer Netscapes (6+)
+        string: navigator.userAgent,
+        subString: "Netscape",
+        identity: "Netscape"
+      }, {
+        string: navigator.userAgent,
+        subString: "MSIE",
+        identity: "IE",
+        versionSearch: "MSIE"
+      }, {
+        string: navigator.userAgent,
+        subString: "Gecko",
+        identity: "Mozilla",
+        versionSearch: "rv"
+      }, { // for older Netscapes (4-)
+        string: navigator.userAgent,
+        subString: "Mozilla",
+        identity: "Netscape",
+        versionSearch: "Mozilla"
+      }],
+      dataOS: [{
+        string: navigator.platform,
+        subString: "Win",
+        identity: "Windows"
+      }, {
+        string: navigator.platform,
+        subString: "Mac",
+        identity: "Mac"
+      }, {
+        string: navigator.userAgent,
+        subString: "iPhone",
+        identity: "iPhone/iPod"
+      }, {
+        string: navigator.platform,
+        subString: "Linux",
+        identity: "Linux"
+      }]
+ 
+    };
+ 
+    BrowserDetect.init();
+ 
+    window.$.client = {
+      OS: BrowserDetect.OS,
+      Browser: BrowserDetect.browser,
+      Version: BrowserDetect.version
+    };
+    var os=$.client.OS;
+    var browser=$.client.Browser;
+    console.log(os);
+    console.log(browser);
+    
+     });
+
+
+ 
+
+
+
+
+</script>
+
+<html>
+ <head>
+   <title>Survey</title>
+ </head>
+ <body style="font-family:Cambria;background-color:white">  
+   <h1 style="color:blue;font-family:Cambria"><em>Survey</em> </h1>
+  <p>
+    Name<input type="text" class='name'>
+    <span style="text-align:right">Birthday<input type="date" class='age'></span>
+  </p>
+  <p>
+    <span style="color:black">1. </span><span style="color:red">Are You a Male or Female?</span>
+    <br>
+    <input type="radio" class='male' value="male">Male 
+    <br>
+    <input type="radio" class='female' value="female">Female
+  </p>
+  <p>
+    <span style="color:black">2. </span><span style="color:red">In Which Country Are You In?</span>
+    <br>
+    <input type="text" class='country'>
+  </p>
+  <p>
+    <span style="color:black">3. </span><span style="color:red">Please give some suggestions to improve our tool?</span>
+    <br>
+    <textarea name="textarea" class='advice' style="width:250px;height:150px;"></textarea>
+  </p>
+    <p>
+    <span style="color:black">4. </span><span style="color:red">Do you have any prototype design experience?</span>
+    <br>
+    <input type="radio" class='e1' value='e1'>Pretty much
+    <br>
+    <input type="radio" class='e2' value='e2'>Good
+    <br>
+    <input type="radio" class='e3' value='e3'>Fair
+    <br>
+    <input type="radio" class='e4' value='e4'>None
+  </p>
+    <p>
+    <span style="color:slateblue">How do you feel about this task?</span>
+    <br>
+    Easy<input type="range">Hard
+   </p>
+   <p>
+     Thanks For Your Time
+     <br>
+     <input type="submit" class='submit' style="font-size:30px;">
+     <br>
+     (You're Welcome)
+   </p>
+   
+
+
+ </body>
+</html>
