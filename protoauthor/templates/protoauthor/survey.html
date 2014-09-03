@@ -82,8 +82,14 @@ var csrftoken = getCookie('csrftoken');
     console.log(experience);
     console.log(gender);
     getsurvey(experience,gender,os,browser,evaluation);
-    alert('submit succeed!');
     
+    var interface_id={{user.interface_id}};
+    var task={{user.task}};
+    var user_id={{user.id}};
+    var task_id=interface_id+'1#1'+task+'2#2'+user_id;
+    console.log(task_id);
+    alert('Submit succeed!\n-----------------------\n Please copy this Task Code to the Mturk to complete!\n ---------------------\n Task Code: '+task_id);
+    $('.already').html('<p> You have submitted the task.     Your Task Code is: '+task_id+'</p>');
     
   });
   
@@ -259,7 +265,7 @@ var csrftoken = getCookie('csrftoken');
     <br>
     Easy<input type="range">Hard
    </p>
-   <p>
+   <p class='already'>
      Thanks For Your Time
      <br>
      <input type="submit" class='submit' style="font-size:30px;">

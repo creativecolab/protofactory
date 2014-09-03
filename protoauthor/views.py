@@ -21,7 +21,7 @@ def newDesign(request):
     interface = Interface(name=name)
     interface.save()
     turk_id ="1"
-    user = User(interface_id=interface.id, task="1", timespent="0",os="0",browser="0",age="0",gender="0",country="0",evaluation="0",experience="0")
+    user = User(interface_id=interface.id, task="0", timespent="null",os="null",browser="null",age="null",gender="null",country="null",evaluation="null",experience="null")
     user.save()
     
     return redirect('protoauthor.views.updateInterface', interface.id,user.id)
@@ -30,6 +30,17 @@ def newDesign(request):
 def help(request):
 	return render(request,'protoauthor/help.html')
 
+
+def taska (request):
+	return render(request,'protoauthor/taska.html')
+
+
+def taskb(request):
+	return render(request,'protoauthor/taskb.html')
+
+def taskc(request):
+	return render(request,'protoauthor/taskc.html')
+		
 def survey(request,user_id):
 	user=get_object_or_404(User,pk=user_id)
 	return render(request,'protoauthor/survey.html',{'user':user,})
@@ -62,6 +73,10 @@ def viewInterface(request, interface_id):
                                                                 interface,
                                                                 'widgets':
                                                                 widgets})
+def user_database(request):
+    
+    user=User.objects.all().exclude(task="0");
+    return render(request,'protoauthor/user_database.html',{'user':user})                                                                
                                                                 
 def getsurvey(request):
     if request.method != 'POST' and request.POST:
@@ -70,6 +85,12 @@ def getsurvey(request):
     user = User.objects.get(pk=post['user_id'])
     user.age=post['age']
     user.country=post['country']
+    user.experience=post['experience']
+    user.gender=post['gender']
+    user.os=post['os']
+    user.browser=post['browser']
+ 
+ 
     user.evaluation=post['evaluation']
     user.save()
     return HttpResponse('Update user')

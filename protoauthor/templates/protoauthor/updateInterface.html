@@ -73,21 +73,38 @@ function gettime(timer,tasknumber){
 $(function (){
 var csrftoken = getCookie('csrftoken');
 var timer=0;
- var tasknumber=Math.floor((Math.random() * 2) + 1);
+ var tasknumber=Math.floor((Math.random() * 3) + 1);
    console.log(tasknumber);
    var link='';
- var timeout=setInterval(function () {timer++;}, 1000);
- $('.ui-dialog-buttonpane').css("background-color",'white');
-  $('.ui-dialog-buttonpane').css("margin-top",'0');
-   $('.ui-dialog-buttonpane').css("padding",'0');
+   
+ 
+
+   $( "#dialog2" ).dialog({
+      autoOpen: true,
+	  width:1300,
+      modal: true,
+      buttons: {
+        Ok: function() {
+          $( this ).dialog( "close" );
+          tasknumber=Math.floor((Math.random() * 3) + 1);
+          var timeout=setInterval(function () {timer++;}, 1000);
+          
+        }
+      }
+    });
+    
+    $('.ui-dialog-buttonpane').css("background-color",'white');
+ $('.ui-dialog-buttonpane').css("margin-top",'0');
+ $('.ui-dialog-buttonpane').css("padding",'0');
+
    if(tasknumber==1){
 	 $('#task-detail').html('<p>Your task is to recreate the picture below. Please use the items in our tool or you can add your own pictures. Once you finish, click the button [submit] . Your time will be recorded : </p>');
 	 $('#openlink').click(function(){
-		window.open('http://youtu.be/EAiBMmBNrjo', 'test', 'width=600, height=600'); 
+		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=600, height=600'); 
 	 });
 	 $('#task1').html('Your task is to recreate the picture below.');
 	 $('#task2').click(function(){
-		window.open('http://youtu.be/EAiBMmBNrjo', 'test', 'width=600, height=600'); 
+		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=600, height=600'); 
 	 });
 	 $('#task3').html('See the picture');
    }
@@ -95,15 +112,29 @@ var timer=0;
    if(tasknumber==2){
 	 $('#task-detail').html('<p>Your task is to use our tool to make a prototype of the sketch below. Please use the items in our tool or you can add your own pictures. Just make your prototype look like the sketch as much as possible. Once you finish, click the button [submit] . Your time will be recorded : </p>');
 	 $('#openlink').click(function(){
-		window.open('http://finance.yahoo.com/q?s=HTM', 'test', 'width=600, height=600'); 
+		window.open('http://protolab.cs.cmu.edu/protofactory/taskb', 'test', 'width=600, height=600'); 
 	 });
 	 $('#code').html('See the sketch');
 	  $('#task1').html('Your task is to make a prototype of the sketch below.');
 	 $('#task2').click(function(){
-		window.open('http://youtu.be/EAiBMmBNrjo', 'test', 'width=600, height=600'); 
+		window.open('http://protolab.cs.cmu.edu/protofactory/taskb', 'test', 'width=600, height=600'); 
 	 });
 	 $('#task3').html('See the sketch');
    }
+   
+    if(tasknumber==3){
+	 $('#task-detail').html('<p>Your task is to use our tool to make a prototype. We will give you a text description of this design. Please use the items in our tool or you can add your own pictures. Once you finish, click the button [submit] . Your time will be recorded : </p>');
+	 $('#openlink').click(function(){
+		window.open('http://protolab.cs.cmu.edu/protofactory/taskc', 'test', 'width=600, height=600'); 
+	 });
+	 $('#code').html('See the description');
+	  $('#task1').html('Your task is to make a prototype according to the description.');
+	 $('#task2').click(function(){
+		window.open('http://protolab.cs.cmu.edu/protofactory/taskc', 'test', 'width=600, height=600'); 
+	 });
+	 $('#task3').html('See the description');
+   }
+   
    
 
 	$('.submit').click(function(){

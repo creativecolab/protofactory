@@ -486,7 +486,7 @@ function arrowhelp(){
 }
 
 function crophelp(){
-	alert('You can do the following things to this item\n 1.Crop: Right-click the item and click the  [Crop] button. Then drag the window to cover what you want to crop.When you finish, press [enter] on your keyboard.\n 2.Resize: Drag the right-bottom corner of the item. Press ［shift］ to fix aspect ratio.')}
+	alert('You can do the following things to this item\n 1.Customize Picture: Double-click the picture, then paste the URL of your picture ! \n 2.Crop: Right-click the item and click the  [Crop] button. Then drag the window to cover what you want to crop.When you finish, press [enter] on your keyboard.\n 3.Resize: Drag the right-bottom corner of the item. Press ［shift］ to fix aspect ratio.')}
 
 
 function get_browser(){
@@ -562,21 +562,11 @@ $(function () {
         duration: 1000
       }
     });
-    $( "#dialog2" ).dialog({
-      autoOpen: true,
-	  width:1300,
-      modal: true,
-      buttons: {
-        Ok: function() {
-          $( this ).dialog( "close" );
-        }
-      }
-    });
-	
+    	
 	
     $('#help').click(function(){
 	//alert('Operating Guidance\n 1.Drag and Drop: Drag the element from the item bar to the canvas. Select the element(with red edges means selected ) and click delete on your keyboard');
-    $( "#dialog" ).dialog('open');
+    //$( "#dialog" ).dialog('open');
 	
 	});
 	
