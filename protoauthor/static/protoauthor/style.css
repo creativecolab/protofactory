@@ -15,7 +15,7 @@ body {
 
 
 .draggable-widget {
-    float: left;
+   float:left;
     
 }
 
@@ -112,32 +112,33 @@ min-height:15px;
 
 #picker{
     
-    width: 73px;
-    height: 73px;
+    width: 80px;
+    height: 53px;
     overflow: none;
 	position:relative;
-	left:1365px;
-	top:-70px;
+	left:1358px;
+	top:-41px;
 	background-repeat: no-repeat;
     background-position:center; 
     background-size:100% 100%;
 	
-    background-image: url('https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/128/paint_bucket.png');
+    background-image: url('http://i.imgur.com/UrZsRGB.png');
  }
  
  
 #pen{
     
-    width: 75px;
-    height: 72px;
+    width: 50px;
+    height: 50px;
     overflow: none;
 	position:relative;
 	left:1300px;
+	top:10px;
 	background-repeat: no-repeat;
     background-position:center; 
     background-size:100% 100%;
 	
-    background-image: url('http://i.imgur.com/jJ1BgnX.png');
+    background-image: url('http://i.imgur.com/cO6PM2t.png');
  }
 
 

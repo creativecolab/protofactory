@@ -44,8 +44,18 @@ function get_site_prefix(){
     return prefix
 }
 
+function makeid()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-function getsurvey(experience,gender,os,browser,evaluation){
+    for( var i=0; i < 8; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+function getsurvey(degree,gender,os,browser,task_id){
 	
 	var prefix = get_site_prefix();
     var user_id = get_user_id();
@@ -55,43 +65,61 @@ function getsurvey(experience,gender,os,browser,evaluation){
         url: prefix + "getsurvey/", 
         data: { 
         user_id: user_id, 
+        mid:$('.mid').val(),
         name:$('.name').val(),
         age:$('.age').val(),
         country:$('.country').val(),
-        experience:experience,
+        language:$('.language').val(),
+        major:$('.major').val(),
+        experience:$('.designexp').val(),
         gender:gender,
         os:os,
         browser:browser,
-        evaluation:evaluation,
+        degree:degree,
+        task_id:task_id,
+        evaluation:$('.advice').val(),
     }});
 }
 
 
 $(function () {
 var csrftoken = getCookie('csrftoken');
+  
+  
+  
+  $(".mid").mouseover(function(){
+
+        $(".hint").show();
+    }).mouseout(function() {
+        $(".hint").hide();
+    });
+  
+  
   $('.submit').click(function(event){
     var gender='';
-    var experience='';
-    var evaluation=$('.advice').val();
+    var degree=$("#selection").val();
+    console.log(degree);
     if($('.male').is(':checked')&& $('.male').val()=='male'){ gender='male';}
     if($('.female').is(':checked')&& $('.female').val()=='female'){gender='female';}
-    if($('.e1').is(':checked')&& $('.e1').val()=='e1'){experience='prettymuch';}
-    if($('.e2').is(':checked')&& $('.e2').val()=='e2'){experience='good';}
-    if($('.e3').is(':checked')&& $('.e3').val()=='e3'){experience='fair';}
-    if($('.e4').is(':checked')&& $('.e4').val()=='e4'){experience='none';}
-    console.log(experience);
-    console.log(gender);
-    getsurvey(experience,gender,os,browser,evaluation);
+    if($('.other').is(':checked')&& $('.other').val()=='other'){gender='other';}
+    
+   
     
     var interface_id={{user.interface_id}};
     var task={{user.task}};
     var user_id={{user.id}};
-    var task_id=interface_id+'1#1'+task+'2#2'+user_id;
+    var task_id=makeid();
+     getsurvey(degree,gender,os,browser,task_id);
     console.log(task_id);
+    if($('.mid').val()==""){
+	  alert('Please fill in your Worker ID first !');
+  }
+    else{
     alert('Submit succeed!\n-----------------------\n Please copy this Task Code to the Mturk to complete!\n ---------------------\n Task Code: '+task_id);
     $('.already').html('<p> You have submitted the task.     Your Task Code is: '+task_id+'</p>');
-    
+    }
   });
+  
   
     $.ajaxSetup({
         crossDomain: false, // obviates need for sameOrigin test
@@ -228,43 +256,59 @@ var csrftoken = getCookie('csrftoken');
  </head>
  <body style="font-family:Cambria;background-color:white">  
    <h1 style="color:blue;font-family:Cambria"><em>Survey</em> </h1>
-  <p>
-    Name<input type="text" class='name'>
-    <span style="text-align:right">Birthday<input type="date" class='age'></span>
+  
+   <p>
+    Your Worker ID <b> (required)</b><input type="text" class='mid'>         
+       <span class='hint' style="display:none;">  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  <i>(To find your Worker ID, please click 'Your Account'-->'Dashboard'. You will find your worker id right beside your name!)</i></span> 
+   </p>
+   <p>
+    Name <b>(optional)</b><input type="text" class='name'>
+    <span style="text-align:right">Age <b>(optional)</b> <input type="text" class='age'></span>
   </p>
   <p>
-    <span style="color:black">1. </span><span style="color:red">Are You a Male or Female?</span>
+    <span style="color:black">1. </span><span style="color:red">Your gender</span>
+    
     <br>
     <input type="radio" class='male' value="male">Male 
-    <br>
+   
     <input type="radio" class='female' value="female">Female
+     <input type="radio" class='other' value="other">Other
   </p>
   <p>
-    <span style="color:black">2. </span><span style="color:red">In Which Country Are You In?</span>
-    <br>
+    <span style="color:black">2. </span><span style="color:red">Home country:</span>
     <input type="text" class='country'>
   </p>
   <p>
-    <span style="color:black">3. </span><span style="color:red">Please give some suggestions to improve our tool?</span>
+    <span style="color:black">3. </span><span style="color:red">Primary Language:</span>
+    <input type="text" class='language'>
+  </p>
+   <p>
+    <span style="color:black">4. </span><span style="color:red">Degree:</span>
+    <select id='selection'>
+    <option value="undergraduate">Undergraduate</option>
+  <option value="graduate">Graduate</option>
+  <option value="phd">Phd</option>
+  <option value="other">Other</option>
+</select>
+  </p>
+   <p>
+    <span style="color:black">5. </span><span style="color:red">Major/Focus:</span>
+    <input type="text" class='major'>
+  </p>
+  
+  <p>
+    <span style="color:black">6. </span><span style="color:red">Do you have any suggestions to our tool?</span>
     <br>
     <textarea name="textarea" class='advice' style="width:250px;height:150px;"></textarea>
   </p>
+  
     <p>
-    <span style="color:black">4. </span><span style="color:red">Do you have any prototype design experience?</span>
+    <span style="color:black">7. </span><span style="color:red">Describe your past design experience:</span>
     <br>
-    <input type="radio" class='e1' value='e1'>Pretty much
+    <textarea name="textarea" class='designexp' style="width:250px;height:150px;"></textarea>
     <br>
-    <input type="radio" class='e2' value='e2'>Good
-    <br>
-    <input type="radio" class='e3' value='e3'>Fair
-    <br>
-    <input type="radio" class='e4' value='e4'>None
-  </p>
-    <p>
-    <span style="color:slateblue">How do you feel about this task?</span>
-    <br>
-    Easy<input type="range">Hard
-   </p>
+    </p>
+    
    <p class='already'>
      Thanks For Your Time
      <br>

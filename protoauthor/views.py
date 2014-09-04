@@ -21,7 +21,7 @@ def newDesign(request):
     interface = Interface(name=name)
     interface.save()
     turk_id ="1"
-    user = User(interface_id=interface.id, task="0", timespent="null",os="null",browser="null",age="null",gender="null",country="null",evaluation="null",experience="null")
+    user = User(interface_id=interface.id, mturk_id="0",task="0", timespent="null",user_name="null",os="null",browser="null",age="null",gender="null",country="null",language="null",degree="null",major="null",evaluation="null",experience="null")
     user.save()
     
     return redirect('protoauthor.views.updateInterface', interface.id,user.id)
@@ -75,7 +75,7 @@ def viewInterface(request, interface_id):
                                                                 widgets})
 def user_database(request):
     
-    user=User.objects.all().exclude(task="0");
+    user=User.objects.all().exclude(survey_code="");
     return render(request,'protoauthor/user_database.html',{'user':user})                                                                
                                                                 
 def getsurvey(request):
@@ -89,9 +89,13 @@ def getsurvey(request):
     user.gender=post['gender']
     user.os=post['os']
     user.browser=post['browser']
- 
- 
+    user.user_name=post['name']
+    user.language=post['language']
+    user.major=post['major']
+    user.degree=post['degree']
     user.evaluation=post['evaluation']
+    user.mturk_id=post['mid']
+    user.survey_code=post['task_id']
     user.save()
     return HttpResponse('Update user')
 

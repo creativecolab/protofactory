@@ -471,23 +471,30 @@ function checkdelete(e,ui)
 }
 
 
-function fonthelp(){
-	alert('You can do the following things to this item\n 1.Bring to front/Bottom: Right-click the item and click the  [bring to front/bottom] button\n 2. Change font: Right-click the item and input the font-size  \n 3.Change the text color: Select the item first (with red edges), then click the [text-color] button at the top-right corner to choose color.\n 4.Change the background: Select the item first, then click the [paint-bucket] button .\n 5.For list: Everytime you input a new line in the textarea, a dot will be automatically added! ');
+function fonthelp(){ 
+    $('#dialog').dialog('open');
+    $('#dialog').html('<p>You can do the following things to this item:</p><p>1.Bring-to-Front/Bottom: Right-click the item and click the [Bring-to-Front/Bottom] button</p><p>2. Change font: Right-click the item and input the font-size</p><p>3.Change the text color: Select the item first (with red edges), then click the [text-color] button at the top-right corner to choose color</p><p>4.Change the background: Select the item first, then click the [paint-bucket] button</p><p></p><p>5.For list: When you start a new line in the textarea, a dot will be automatically added</p>');
+	
 	
 }
 
 function iphonehelp(){
-	alert('You can do the following things to this item\n 1.Bring to front/Bottom: Right-click the item and click the  [bring to front/bottom] button\n 2.Resize: Drag the right-bottom corner of the item. Press ［shift］ to fix aspect ratio.');
+    $('#dialog').dialog('open');
+    $('#dialog').html('<p>You can do the following things to this item:</p><p>1.Bring-to-Front/Bottom: Right-click the item and click the [Bring-to-Front/Bottom] button</p><p>2.Resize: Drag the right-bottom corner of the item. Press ［shift］ to fix aspect ratio.</p>');
+	
 	
 }
 
 function arrowhelp(){
-	alert('You can do the following things to this item\n 1.Clockwise-Rotate: Right-click the item and click the  [Clockwise-Rotate] button\n 2.Counterclockwise-Rotate: Click the [Counterclockwise]button.');
+    $('#dialog').dialog('open');
+    $('#dialog').html('<p>You can do the following things to this item:</p><p>1.Clockwise-Rotate: Right-click the item and click the [Clockwise-Rotate] button</p> <p> 2.Counterclockwise-Rotate: Click the [Counterclockwise]button.</p>');
+	
 }
 
 function crophelp(){
-	alert('You can do the following things to this item\n 1.Customize Picture: Double-click the picture, then paste the URL of your picture ! \n 2.Crop: Right-click the item and click the  [Crop] button. Then drag the window to cover what you want to crop.When you finish, press [enter] on your keyboard.\n 3.Resize: Drag the right-bottom corner of the item. Press ［shift］ to fix aspect ratio.')}
-
+    $('#dialog').dialog('open');
+    $('#dialog').html('<p>You can do the following things to this item:</p><p>1.Customize Picture: Double-click the picture, then paste the URL of your picture</p> <p> 2.Crop: Right-click the item and click the [Crop] button. Then drag the window to cover what you want to crop. When you finish, press [enter] on your keyboard</p><p>3.Resize: Drag the right-bottom corner of the item. Press［shift］to fix aspect ratio</p>');
+	}
 
 function get_browser(){
     var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []; 
@@ -552,10 +559,10 @@ $(function () {
    
     $( "#dialog" ).dialog({
       autoOpen: false,
-	  width:1000,
+	  width:600,
       show: {
         effect: "blind",
-        duration: 1000
+        duration: 500
       },
       hide: {
         effect: "explode",
@@ -834,15 +841,15 @@ $(function () {
 	crop=$('.existing-widget').find('.crop');
 	for(var i=0;i<crop.length;i++){
 	  $(crop[i]).contextmenu({ 
-					  'crop':func2},
+					  'Crop':func2},
 					  'right');
 	}
 
     changefont=$('.existing-widget').find('.changefont');
 	for(var i=0;i<changefont.length;i++){
     if($(changefont[i]).hasClass('changefont')){
-    $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
-	                    'bringtoBottom':func8,
+    $(changefont[i]).parent().contextmenu({'Bring-to-Front':func1,
+	                    'Bring-to-Bottom':func8,
                         'Change-Font':func3,
 						  },
                         'right');
@@ -852,8 +859,8 @@ $(function () {
 	iphone=$('.existing-widget').find('.iphone');
 	for(var i=0;i<iphone.length;i++){
     if($(iphone[i]).hasClass('iphone')){
-    $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
-	                    'bringtoBottom':func8
+    $(iphone[i]).parent().contextmenu({'Bring-to-Front':func1,
+	                    'Bring-to-Bottom':func8
                         },
                         'right');
      }  
@@ -1006,8 +1013,8 @@ $(function () {
                 changefont=$(widgetnew).find('.changefont')
                for (var i=0;i<changefont.length;i++){
                
-                    $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
-           'BringtoBottom':func8,
+                    $(changefont[i]).parent().contextmenu({'Bring-to-Front':func1,
+           'Bring-to-Bottom':func8,
                         'Change-Font':func3,
               },
                         'right');
@@ -1016,8 +1023,8 @@ $(function () {
 iphone=$(widgetnew).find('.iphone')
 for (var i=0;i<iphone.length;i++){
                
-                    $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
-    'BringtoBottom':func8},
+                    $(iphone[i]).parent().contextmenu({'Bring-to-Front':func1,
+    'Bring-to-Bottom':func8},
                         'right');
                 } 
                 //arrow contextmenu
@@ -1033,7 +1040,7 @@ crop=$(widgetnew).find('.crop');
       for(var i=0;i<crop.length;i++){
 $(crop[i]).contextmenu({
                    
-                        'crop':func2},
+                        'Crop':func2},
                       'right');
 }
 // contextmenu ends
@@ -1155,8 +1162,8 @@ $(crop[i]).contextmenu({
                 changefont=$(widgetnew).find('.changefont')
                for (var i=0;i<changefont.length;i++){
                
-                    $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
-           'BringtoBottom':func8,
+                    $(changefont[i]).parent().contextmenu({'Bring-to-Front':func1,
+           'Bring-to-Bottom':func8,
                         'Change-Font':func3,
          },
                         'right');
@@ -1165,8 +1172,8 @@ $(crop[i]).contextmenu({
 iphone=$(widgetnew).find('.iphone')
 for (var i=0;i<iphone.length;i++){
                
-                    $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
-    'BringtoBottom':func8},
+                    $(iphone[i]).parent().contextmenu({'Bring-to-Front':func1,
+    'Bring-to-Bottom':func8},
                         'right');
                 } 
                 //arrow contextmenu
@@ -1182,7 +1189,7 @@ crop=$(widgetnew).find('.crop');
       for(var i=0;i<crop.length;i++){
 $(crop[i]).contextmenu({
                    
-                        'crop':func2},
+                        'Crop':func2},
                       'right');
 }
 // contextmenu ends
@@ -1354,10 +1361,10 @@ $(crop[i]).contextmenu({
 				changefont=$(widget).find('.changefont')
 				for (var i=0;i<changefont.length;i++){
                 
-                    $(changefont[i]).parent().contextmenu({'Bringtofront':func1,
-					    'BringtoBottom':func8,
+                    $(changefont[i]).parent().contextmenu({'Bring-to-Front':func1,
+					    'Bring-to-Bottom':func8,
                         'Change-Font':func3,
-                        'help':fonthelp,
+                        'Help':fonthelp,
 						},
                         'right');
                 }  
@@ -1365,9 +1372,9 @@ $(crop[i]).contextmenu({
 				iphone=$(widget).find('.iphone')
 				for (var i=0;i<iphone.length;i++){
                 
-                    $(iphone[i]).parent().contextmenu({'Bringtofront':func1,
-					    'BringtoBottom':func8,
-					    'help':iphonehelp,},
+                    $(iphone[i]).parent().contextmenu({'Bring-to-Front':func1,
+					    'Bring-to-Bottom':func8,
+					    'Help':iphonehelp,},
                         'right');
                 }  
 				
@@ -1381,7 +1388,7 @@ $(crop[i]).contextmenu({
 				if($(arrowcont[i]).hasClass('arrow')){
 				  $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
                         'Counterclockwise':func6,
-                        'help':arrowhelp,},
+                        'Help':arrowhelp,},
                         'right');
 			    }
 				}
@@ -1392,8 +1399,8 @@ $(crop[i]).contextmenu({
 			
 				 $(crop[i]).contextmenu({ 
 					                    
-				                        'crop':func2,
-				                        'help':crophelp,},
+				                        'Crop':func2,
+				                        'Help':crophelp,},
 					                      'right');
 				}
 				
@@ -1545,7 +1552,11 @@ $(crop[i]).contextmenu({
         removemenu(e);
         $(el).data('clickphase',true);
         setTimeout(function(){$(el).removeData('clickphase');},300);
-        $(el).addClass('selected');
+        console.log($(el));
+        if($(el).hasClass('arrow')){$(el).parent().addClass('selected');}
+        else if($(el).hasClass('crop')){$(el).parent().addClass('selected');}
+        
+        else{$(el).addClass('selected');}
         var m = $('<ul id="'+$.contextmenu+'">');
         $.each(menu, function(n,a) {
             if(typeof a == 'function') {

@@ -11,13 +11,19 @@ class Interface(models.Model):
 class User(models.Model):
 	
 	interface_id = models.CharField(max_length=200)
+	mturk_id = models.CharField(max_length=200)
+	survey_code=models.CharField(max_length=200)
 	task = models.CharField(max_length=200)
 	timespent = models.CharField(max_length=200)
+	user_name = models.CharField(max_length=200)
 	os = models.CharField(max_length=200)
 	browser = models.CharField(max_length=200)
 	age = models.CharField(max_length=200)
 	gender = models.CharField(max_length=200)
 	country = models.CharField(max_length=200)
+	language = models.CharField(max_length=200)
+	degree = models.CharField(max_length=200)
+	major = models.CharField(max_length=200)
 	evaluation = models.CharField(max_length=200)
 	experience = models.CharField(max_length=200)
     

@@ -84,29 +84,36 @@ var timer=0;
 	  width:1300,
       modal: true,
       buttons: {
-        Ok: function() {
+        'Accept': function() {
           $( this ).dialog( "close" );
           tasknumber=Math.floor((Math.random() * 3) + 1);
           var timeout=setInterval(function () {timer++;}, 1000);
           
+        },
+        Cancel:function(){
+           $( this ).dialog( "close" );
+	       $('.submit').css('opacity','0');
         }
       }
     });
     
-    $('.ui-dialog-buttonpane').css("background-color",'white');
+ $('.ui-dialog-buttonpane').css("background-color",'white');
  $('.ui-dialog-buttonpane').css("margin-top",'0');
  $('.ui-dialog-buttonpane').css("padding",'0');
 
    if(tasknumber==1){
 	 $('#task-detail').html('<p>Your task is to recreate the picture below. Please use the items in our tool or you can add your own pictures. Once you finish, click the button [submit] . Your time will be recorded : </p>');
 	 $('#openlink').click(function(){
-		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=600, height=600'); 
+		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=700, height=600'); 
 	 });
+	 $('#openlink').html('<img style="width:250px;height:130px;" src="http://i.imgur.com/F4yWlCY.png"></img>');
+	 $('#des').text('(click to extend the picture)');
 	 $('#task1').html('Your task is to recreate the picture below.');
 	 $('#task2').click(function(){
-		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=600, height=600'); 
+		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=700, height=600'); 
 	 });
-	 $('#task3').html('See the picture');
+	 $('#task2').html('<img style="width:100px;height:50px;" src="http://i.imgur.com/F4yWlCY.png"></img>');
+	 $('#task3').text('Click to extend the picture');
    }
    
    if(tasknumber==2){
@@ -114,12 +121,14 @@ var timer=0;
 	 $('#openlink').click(function(){
 		window.open('http://protolab.cs.cmu.edu/protofactory/taskb', 'test', 'width=600, height=600'); 
 	 });
-	 $('#code').html('See the sketch');
+	 $('#openlink').html('<img style="width:150px;height:100px;" src="http://i.imgur.com/wV9G4fX.jpg"></img>');
+	 $('#des').html('(click to extend the sketch)');
 	  $('#task1').html('Your task is to make a prototype of the sketch below.');
 	 $('#task2').click(function(){
 		window.open('http://protolab.cs.cmu.edu/protofactory/taskb', 'test', 'width=600, height=600'); 
 	 });
-	 $('#task3').html('See the sketch');
+	 $('#task2').html('<img style="width:80px;height:80px;" src="http://i.imgur.com/wV9G4fX.jpg"></img>');
+	 $('#task3').html('Click to extend the sketch');
    }
    
     if(tasknumber==3){
@@ -127,12 +136,14 @@ var timer=0;
 	 $('#openlink').click(function(){
 		window.open('http://protolab.cs.cmu.edu/protofactory/taskc', 'test', 'width=600, height=600'); 
 	 });
-	 $('#code').html('See the description');
+	 $('#openlink').html('<img style="width:250px;height:100px;" src="http://i.imgur.com/Nipyt7O.png"></img>');
+	 $('#des').html('(click to extend the description)');
 	  $('#task1').html('Your task is to make a prototype according to the description.');
 	 $('#task2').click(function(){
 		window.open('http://protolab.cs.cmu.edu/protofactory/taskc', 'test', 'width=600, height=600'); 
 	 });
-	 $('#task3').html('See the description');
+	 $('#task2').html('<img style="width:90px;height:90px;" src="http://i.imgur.com/Nipyt7O.png"></img>');
+	 $('#task3').html('Click to extend the description');
    }
    
    
@@ -145,9 +156,7 @@ var timer=0;
 	   var r = confirm("Submit Your Work ? ");
 	
        if (r == true) {
-	   
-        alert(id+ '\n *************************\n------------------------------------\n Your TIME is :'+timer + 's\n ****************************\n');
-	          } 
+	   	          } 
 	   
 	   
 	});
@@ -170,9 +179,9 @@ var timer=0;
  <div class='task' style='opacity:0;'>
  <span id='task1'> Your task is to recreate the picture below: </span>
   <button id="task2">
-    <code id='task3' style="font-size:14px;">See the picture</code>
+    <code  style="font-size:14px;">See the picture</code>
   </button>
-  <br/>
+  <p id='task3'> Click to extend </p>
   <br/>
   <span> About how to use this tool: </span>
   <button id='help1' onclick="window.open('http://protolab.cs.cmu.edu/protofactory/help', 'test', 'width=600, height=600');">
@@ -201,7 +210,7 @@ var timer=0;
         margin:auto;font-size:42px;font-family:Verdana;"> Prototype
         Factory </span> 
  
-	<a href="{% url 'survey' user.id%}"><img class='submit' style="float:right; width:180px; height:57px"  src="http://gentleninja.com/wp-content/uploads/2012/07/submit.png"></img></a>
+	<a class='submitout' href="{% url 'survey' user.id%}"><img class='submit' style="float:right; width:180px; height:57px"  src="http://gentleninja.com/wp-content/uploads/2012/07/submit.png"></img></a>
 	
 	<br/>
 	<br/>
@@ -228,7 +237,7 @@ var timer=0;
 	
 	 
 
-    <div class="draggable-widget" id="inputbox-w" style="z-index:200;">
+    <div class="draggable-widget" id="inputbox-w" style="height:53px;z-index:200;">
         <div class="widget-content changefont">
             <div class="full-sized input-box-background table backcolor">
                 <div class="full-sized vcenter hcenter">
@@ -271,13 +280,21 @@ var timer=0;
             </div>
         </div>
     </div>
-
+    
+     <div class="draggable-widget" id="iphone-w" style="width:38px;height:65px;z-index:200;"  >
+        <div class="widget-content iphone" id="iphone">
+            <div class="iphone-background full-sized backcolor"></div>
+        </div>
+    </div>
     
     <div class="draggable-widget" id="list-w" style="position:relative;top:3px;z-index:200;">
-        <div class="widget-content changefont backcolor">
+        <div class="widget-content changefont backcolor" >
             <ul class="edit-list fontsize"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>
         </div>
     </div>
+    
+    
+   
     
       <div class="draggable-widget" id="arrow-w" style="z-index:200;">
         <div class="widget-content arrow">
@@ -295,11 +312,7 @@ var timer=0;
         </div>
     </div>
 	
-    <div class="draggable-widget" id="iphone-w" style="position:relative; left:12px; top:-4px; width:36px;height:60px;z-index:200;"  >
-        <div class="widget-content iphone" id="iphone">
-            <div class="iphone-background full-sized backcolor"></div>
-        </div>
-    </div>	
+   
 	
     
 	
@@ -324,40 +337,26 @@ var timer=0;
 	
 	
 	
-   <div id="dialog" class='dia' title="help" style="background-color:white" > <p style="font-size:18px;" >1. Drag and Drop: Please drag the element from the items'bar to the canvas.If you want to 
-   delete the items, make sure you have selected it (with red edges), then press 'delete' on the keyboard !</p>
-   <p>   2. Bring to front/bottom: Right click the item on the canvas, you will see a 
-   button called 'bring to front/bottom' </p>
-   <p>  3. Copy and Paste: make sure you have select(with red edges) the element and press ctrl+c and ctrl+v. </p>
-   <p>  4. Mutiple-select: Two ways: a. Press ALT on the keyboard first, then drag and cover the element you want to select. b. Click and press CTRL at the same time to select more than one element. </p>
-   <p>      Also, mutiple items can be drag at the same time! </p>
-   <p>  5. Change Color: right click the item if you see "change the background". Then click the color box on the above to choose your color, then press 'ok'</p>
-   <p>  6. Change Font: right click if you see "change the font". Put the font-size like '20' in the input box. You needn't add unit!</p>
-   <p>  7. Add your own picture: Drag the "add your own" widget on the canvas and double click. You need to google your own picture's URL and paste it in the box. </P>
-   <p>  8. Rotate the arrow: Right-click the arrow and let it rorate.</p>
-   <p>  9. Resize: Drag the right-bottom corner the item (Sorry we just have one angle to resize). Press SHIFT to fix aspect ratio </p>
-   <p> 10. Edit the text: Double-click the text on the item and type. When you finish, please out-focus the textbox. </p>
-   <p> 11. Crop: Just used for "add your own" widget. Right-click and click 'crop'. After you select the image, press ENTER </p>
-   <p> 12. List item: Everytime you enter a new-line, a dot will be automatically added to a new line </p>
+   <div id="dialog" class='dia' title="Help" style="background-color:white" > 
    
-   
+      
    </div>
    
  
 
 
 </div>
+   
 
-
-   <div id="dialog2" class='dia' title="Your Task" style="background-color:white;" > <div id='task-detail'> <p style="font-size:20px;" >a</p>
+   <div id="dialog2" class='dia' title="Your Task" style="background-color:white;z-index:500;" > <div id='task-detail'> <p style="font-size:20px;" >a</p>
     </div>
   
      <button id='openlink'>
-    <code style="font-size:16px;" id='code'>See the picture</code>
+    <div style="font-size:16px;" id='code'></div>
      </button>
-   
+   <p id='des'>a</p>
   <br/>
-  <br/>
+ 
   <span> About how to use this tool: </span>
   <button id='help' onclick="window.open('http://protolab.cs.cmu.edu/protofactory/help', 'test', 'width=600, height=600');">
     <code style="font-size:16px;">Help</code>
