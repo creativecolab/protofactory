@@ -73,10 +73,15 @@ def viewInterface(request, interface_id):
                                                                 interface,
                                                                 'widgets':
                                                                 widgets})
+def log(request):
+    
+    log =Log.objects.all();
+    return render(request,'protoauthor/log.html',{'log':log,})   
+    
 def user_database(request):
     
     user=User.objects.all().exclude(survey_code="");
-    return render(request,'protoauthor/user_database.html',{'user':user})                                                                
+    return render(request,'protoauthor/user_database.html',{'user':user})                                                              
                                                                 
 def getsurvey(request):
     if request.method != 'POST' and request.POST:
@@ -158,7 +163,7 @@ def updateWidget(request):
     if request.method != 'POST' and request.POST:
         return HttpResponse("ERROR")
     post = request.POST.dict()
-    widget = Widget.objects.get(pk=post['widget_id'])
+    widget = Widget.objects.get(pk=post['widgetid'])
 
     old_value = widget.value
     old_top = widget.top
@@ -182,6 +187,7 @@ def updateWidget(request):
               left = widget.left,
               width = widget.width,
               height = widget.height)
+    log.created = post['timestamp']
     log.save()
 
     undo = Undo(interface = widget.interface,

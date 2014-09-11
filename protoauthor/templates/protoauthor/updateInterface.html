@@ -83,7 +83,10 @@ var timer=0;
       autoOpen: true,
 	  width:1300,
       modal: true,
+      closeOnEscape: false,
+      open: function(event, ui) { $(".ui-dialog-titlebar-close", ui.dialog || ui).hide();},
       buttons: {
+        
         'Accept': function() {
           $( this ).dialog( "close" );
           tasknumber=Math.floor((Math.random() * 3) + 1);
@@ -93,7 +96,7 @@ var timer=0;
         Cancel:function(){
            $( this ).dialog( "close" );
 	       $('.submit').css('opacity','0');
-        }
+        },
       }
     });
     
@@ -104,15 +107,15 @@ var timer=0;
    if(tasknumber==1){
 	 $('#task-detail').html('<p>Your task is to recreate the picture below. Please use the items in our tool or you can add your own pictures. Once you finish, click the button [submit] . Your time will be recorded : </p>');
 	 $('#openlink').click(function(){
-		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=700, height=600'); 
+		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=820, height=600'); 
 	 });
-	 $('#openlink').html('<img style="width:250px;height:130px;" src="http://i.imgur.com/F4yWlCY.png"></img>');
+	 $('#openlink').html('<img style="width:250px;height:130px;" src="http://i.imgur.com/AMVxg5h.png"></img>');
 	 $('#des').text('(click to extend the picture)');
 	 $('#task1').html('Your task is to recreate the picture below.');
 	 $('#task2').click(function(){
-		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=700, height=600'); 
+		window.open('http://protolab.cs.cmu.edu/protofactory/taska', 'test', 'width=820, height=600'); 
 	 });
-	 $('#task2').html('<img style="width:100px;height:50px;" src="http://i.imgur.com/F4yWlCY.png"></img>');
+	 $('#task2').html('<img style="width:100px;height:50px;" src="http://i.imgur.com/AMVxg5h.png"></img>');
 	 $('#task3').text('Click to extend the picture');
    }
    
@@ -121,13 +124,13 @@ var timer=0;
 	 $('#openlink').click(function(){
 		window.open('http://protolab.cs.cmu.edu/protofactory/taskb', 'test', 'width=600, height=600'); 
 	 });
-	 $('#openlink').html('<img style="width:150px;height:100px;" src="http://i.imgur.com/wV9G4fX.jpg"></img>');
+	 $('#openlink').html('<img style="width:150px;height:100px;" src="http://i.imgur.com/Qpc8VL8.jpg"></img>');
 	 $('#des').html('(click to extend the sketch)');
 	  $('#task1').html('Your task is to make a prototype of the sketch below.');
 	 $('#task2').click(function(){
 		window.open('http://protolab.cs.cmu.edu/protofactory/taskb', 'test', 'width=600, height=600'); 
 	 });
-	 $('#task2').html('<img style="width:80px;height:80px;" src="http://i.imgur.com/wV9G4fX.jpg"></img>');
+	 $('#task2').html('<img style="width:80px;height:80px;" src="http://i.imgur.com/Qpc8VL8.jpg"></img>');
 	 $('#task3').html('Click to extend the sketch');
    }
    

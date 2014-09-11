@@ -9,6 +9,7 @@ var y1=0;
 var y2=0;
 var candelete=1;
 var timeoutId = 0;
+var copy_paste= 1;
 
 
 // DJANGO hack to be able to post with CSRF
@@ -133,6 +134,7 @@ function get_user_id(){
 function createWidget(widget){
     var prefix = get_site_prefix();
     var interface_id = get_interface_id();
+    var timestamp = new Date().getTime();
     $.ajax({
         type: "POST",
         url: prefix + "createWidget/", 
@@ -142,7 +144,9 @@ function createWidget(widget){
         top: $(widget).css('top'), 
         left: $(widget).css('left'), 
         width: $(widget).css('width'), 
-        height: $(widget).css('height')},
+        height: $(widget).css('height'),
+        time: timestamp,
+},
         success: function(data){
             $(widget).attr('widget-id', data['pk']);
             console.log(data);
@@ -153,30 +157,37 @@ function createWidget(widget){
 function updateWidget(widget){
     if(textupdate==1){
     var prefix = get_site_prefix();
+    var timestamp = new Date().getTime();
+    console.log(timestamp);
     $.ajax({
         type: "POST",
         url: prefix + "updateWidget/", 
         data: { 
-            widget_id: $(widget).attr('widget-id'), 
+        widgetid: $(widget).attr('widget-id'), 
         value: $(widget).find(".widget-content")[0].outerHTML, 
         top: $(widget).css('top'), 
         left: $(widget).css('left'),
         width: $(widget).css('width'),
-        height: $(widget).css('height')
+        height: $(widget).css('height'),
+        timestamp: timestamp,
         },
         success: function(data){
             console.log(data);
         },
     });
-}
+ }
 }
 
 function deleteWidget(widget){
     var prefix = get_site_prefix();
+    var timestamp = new Date().getTime();
+
     $.ajax({
         type: "POST",
         url: prefix + "deleteWidget/", 
-        data: { widget_id: $(widget).attr('widget-id') },
+        data: { widget_id: $(widget).attr('widget-id'),
+        time: timestamp,
+     },
         success: function(data){
             console.log(data);
         },
@@ -185,8 +196,10 @@ function deleteWidget(widget){
 } 
 
 function makeEditable(event){
+    copy_paste=0;
     textupdate=0;
     editableText = $("<textarea />");
+    $()
 	$(editableText).attr('wrap','hard');
     $(editableText).css("width","100%");
     $(editableText).css("height","100%");
@@ -198,6 +211,7 @@ function makeEditable(event){
         $(this).blur();
     });
     $(editableText).focusout(function(event, ui){
+        copy_paste=1;
         var uneditableText = $("<div/>");
         uneditableText.addClass("text-oneline");
 		uneditableText.addClass("fontsize");
@@ -217,6 +231,7 @@ function makeEditable(event){
 
 function makeListEditable(event){
     textupdate=0;
+    copy_paste=0;
     editableText = $("<textarea />");
     $(editableText).css("width","100%");
     $(editableText).css("height","100%");
@@ -240,6 +255,7 @@ function makeListEditable(event){
         $(this).blur();
     });
     $(editableText).focusout(function(event, ui){
+        copy_paste=1;
         var uneditableText = $("<ul/>");
         uneditableText.addClass("edit-list");
 		uneditableText.addClass("fontsize");
@@ -265,6 +281,7 @@ function makeListEditable(event){
 
 function makeTextEditable(event){
     textupdate=0;
+    copy_paste=0;
     editableText = $("<textarea />");
 	$(editableText).attr('wrap','hard');
     $(editableText).css("width","100%");
@@ -277,6 +294,7 @@ function makeTextEditable(event){
         $(this).blur();
     });
     $(editableText).focusout(function(event, ui){
+        copy_paste=1;
         var uneditableText = $("<div/>");
         uneditableText.addClass("text-newline");
 		uneditableText.addClass("fontsize");
@@ -521,6 +539,21 @@ function rgb2hex(rgb) {
     return  hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
 }
 
+function Addown(e,ui){
+	 var myown=$(ui).find("#addown");
+        if($(myown).length>0){
+            var favorite = prompt('What is the URL of your picture?', 'https://img.png (Please paste the picture URL here)');
+
+            if (favorite) {
+                console.log("Your link is: " +  favorite);
+                myown.attr("src",favorite);
+            }
+            else console.log("You pressed Cancel or no value was entered!");
+        }
+        var update=$(ui).parent();
+        updateWidget(update);
+	
+}
 $(function () {
 
     // BEGIN DJANGO AJAX
@@ -841,6 +874,7 @@ $(function () {
 	crop=$('.existing-widget').find('.crop');
 	for(var i=0;i<crop.length;i++){
 	  $(crop[i]).contextmenu({ 
+	                  'Add Picture':Addown,
 					  'Crop':func2},
 					  'right');
 	}
@@ -973,7 +1007,7 @@ $(function () {
 
     // copy and paste
    
-    if(browser=='Firefox'){
+    if(browser=='Firefox'&&copy_paste==1){
 	    
 	    $(document).keydown(function(e){
         if(e.ctrlKey&&(e.keyCode==67)){
@@ -1039,7 +1073,7 @@ if($(arrowcont[i]).hasClass('arrow')){
 crop=$(widgetnew).find('.crop');
       for(var i=0;i<crop.length;i++){
 $(crop[i]).contextmenu({
-                   
+                        'Add Picture':Addown,
                         'Crop':func2},
                       'right');
 }
@@ -1122,8 +1156,8 @@ $(crop[i]).contextmenu({
     });
    };
    
-   if(browser=='Chrome'){
-   
+   if(browser=='Chrome'&&copy_paste==1){
+     console.log(copy_paste);
      $("html").bind({
         copy: function(){
  
@@ -1140,7 +1174,6 @@ $(crop[i]).contextmenu({
         },
         paste: function(){
             var j=0;
-		//	alert('ddd')
  
             for(j=0;j<number;j++){
                 var widgetnew=$(widget[j]).clone();
@@ -1163,35 +1196,35 @@ $(crop[i]).contextmenu({
                for (var i=0;i<changefont.length;i++){
                
                     $(changefont[i]).parent().contextmenu({'Bring-to-Front':func1,
-           'Bring-to-Bottom':func8,
-                        'Change-Font':func3,
-         },
-                        'right');
-                } 
+                                                           'Bring-to-Bottom':func8,
+                                                           'Change-Font':func3,
+                                                           },
+                                                            'right');
+                    } 
                
-iphone=$(widgetnew).find('.iphone')
-for (var i=0;i<iphone.length;i++){
+               iphone=$(widgetnew).find('.iphone')
+               for (var i=0;i<iphone.length;i++){
                
                     $(iphone[i]).parent().contextmenu({'Bring-to-Front':func1,
-    'Bring-to-Bottom':func8},
-                        'right');
+                                                       'Bring-to-Bottom':func8},
+                                                       'right');
                 } 
                 //arrow contextmenu
-arrowcont=$(widgetnew).find('.widget-content');
-for(var i=0;i<arrowcont.length;i++){
-if($(arrowcont[i]).hasClass('arrow')){
-  $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
-                        'Counterclockwise':func6},
-                        'right');
-    }
-}
-crop=$(widgetnew).find('.crop');
-      for(var i=0;i<crop.length;i++){
-$(crop[i]).contextmenu({
-                   
-                        'Crop':func2},
-                      'right');
-}
+                arrowcont=$(widgetnew).find('.widget-content');
+                for(var i=0;i<arrowcont.length;i++){
+                if($(arrowcont[i]).hasClass('arrow')){
+                $(arrowcont[i]).contextmenu({'Clockwise-Rotate':func5,
+                                             'Counterclockwise':func6},
+                                             'right');
+                                            }
+                }
+                crop=$(widgetnew).find('.crop');
+                for(var i=0;i<crop.length;i++){
+                $(crop[i]).contextmenu({
+                                  'Add Picture':Addown,
+                                  'Crop':func2},
+                                  'right');
+                }
 // contextmenu ends
                 console.log($(widgetnew));
  
@@ -1398,7 +1431,7 @@ $(crop[i]).contextmenu({
 
 			
 				 $(crop[i]).contextmenu({ 
-					                    
+					                    'Add Picture':Addown,
 				                        'Crop':func2,
 				                        'Help':crophelp,},
 					                      'right');

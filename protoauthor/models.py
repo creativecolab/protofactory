@@ -60,7 +60,7 @@ class Log(models.Model):
     left = models.CharField(max_length=200)
     width = models.CharField(max_length=200)
     height = models.CharField(max_length=200)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.CharField(max_length=200)
 
 class Undo(models.Model):
     interface = models.ForeignKey(Interface)
